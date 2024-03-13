@@ -2,7 +2,6 @@ const { Schema, model } = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const userSchema = new Schema({
-    // TO DO add unique ID associated for each User
     name: {
         type: String,
         required: true,
