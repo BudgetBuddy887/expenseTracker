@@ -1,51 +1,42 @@
-const { User, Expense } = require('../models');
-const { signToken, AuthenticationError } = require('../utils/auth');
+const { Budget, Expense, User } = require('../models');
 
 const resolvers = {
   Query: {
-    users: async () => {
-      return User.find().populate('expenses');
+      user: async () => {
+        return db.user
+        // return await User.find({}).populate
+      },
+      category: async () => {
+        return db.user
+        // return await User.find({}).populate
+      },
+      expense: async () => {
+        return db.user
+        // return await User.find({}).populate
+      },
+      budget: async () => {
+        return db.user
+        // return await User.find({}).populate
+      },
+      auth: async () => {
+        return db.user
+        // return await User.find({}).populate
+      },
     },
-    user: async (parent, { username }) => {
-      return User.findOne({ username }).populate('expenses');
-    },
-    expenses: async (parent, { username }) => {
-      const params = username ? { username } : {};
-      return expense.find(params).sort({ createdAt: -1 });
-    },
-    
-    me: async (parent, args, context) => {
-      if (context.user) {
-        return User.findOne({ _id: context.user._id }).populate('expenses');
-      }
-      throw AuthenticationError;
-    },
-  },
-
-  Mutation: {
+    Mutation: {
     addUser: async (parent, { username, email, password }) => {
-      const user = await User.create({ username, email, password });
-      const token = signToken(user);
-      return { token, user };
+     return await User.create ({ username, email, password });
     },
-    login: async (parent, { email, password }) => {
-      const user = await User.findOne({ email });
-
-      if (!user) {
-        throw AuthenticationError;
-      }
-
-      const correctPw = await user.isCorrectPassword(password);
-
-      if (!correctPw) {
-        throw AuthenticationError;
-      }
-
-      const token = signToken(user);
-
-      return { token, user };
-    },
-  },
+    // updateUserName(parent.args){
+    //   const {id, }
+    // },
+    // addBudget
+    // updateBudget
+    // deleteBudget
+    // addExpense
+    // updateExpense
+    // deleteExpense
+  }
 };
 
-module.exports = resolvers;
+module.exports = resolvers

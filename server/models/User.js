@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const userSchema = new Schema({
-    name: {
+    username: {
         type: String,
         required: true,
         trim: true,
@@ -19,11 +19,6 @@ const userSchema = new Schema({
         // validator?
         minLength: 6,
     },
-    phone: {
-        type: Number,
-        required: false,
-        //validator?
-    }
 });
 
 userSchema.pre('save', async function (next) {

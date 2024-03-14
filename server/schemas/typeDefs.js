@@ -1,59 +1,60 @@
-// const {gql} = require('apollo-server-express');
+const {gql} = require('apollo-server-express');
 
-// const typeDefs = gql`
-//   type User {
-//     _id: ID!
-//     username: String!
-//     email: String!
-//     password: String!
-//     phone: String!
-//     addressLine1: String
-//     addressLine2: String
-//     addressLine3: String
-//     city: String
-//     postcode: String
-//     county: String
-//     country: String
-//     userType: UserType!
-//     expenses: [Expense]
-//     budgets: [Budget]
-//     createdAt: Date!
-//   }
+const typeDefs = gql`
 
-//   type UserType {
-//     _id: ID!
-//     userType: String!
-//   }
+  scalar Date
 
-//   type Category {
-//     _id: ID!
-//     category: String!
-//   }
+  type User {
+    _id: ID!
+    username: String!
+    email: String!
+    password: String!
+    expenses: [Expense]
+    budgets: [Budget]
+    createdAt: Date!
+  }
 
-//   type Expense {
-//     _id: ID!
-//     description: String!
-//     amount: Float!
-//     expenseDate: Date!
-//     category: Category!
-//     company: String!
-//     isRecurring: Boolean!
-//     createdAt: Date!
-//   }
+  type Category {
+    _id: ID!
+    category: String!
+  }
 
-//   type Budget {
-//     _id: ID!
-//     description: String!
-//     amount: Float!
-//     category: Category!
-//     createdAt: Date!
-//   }
+  type Expense {
+    _id: ID!
+    description: String!
+    amount: Float!
+    expenseDate: Date!
+    category: Category!
+    company: String!
+    isRecurring: Boolean!
+    createdAt: Date!
+  }
 
-//   type Mutation {
-//     addUser(username:String!, email:String!, password:String!): Auth
-//     login(email: String!, password: String!): Auth
-//   }
+  type Budget {
+    _id: ID!
+    description: String!
+    amount: Float!
+    category: Category!
+    createdAt: Date!
+  }
 
-// `;
+  type Auth {
+    token: String!
+    user: User!
+  }
 
-// module.exports = typeDefs;
+  type Query {
+    user: [User]
+    category: [Category]
+    expense: [Expense]
+    budget: [Budget]
+    auth: [Auth]
+  }
+
+  type Mutation {
+    addUser(username:String!, email:String!, password:String!): User
+  }
+
+`;
+
+module.exports = typeDefs;
