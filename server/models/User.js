@@ -1,6 +1,9 @@
 const { Schema, model } = require('mongoose');
 const bcrypt = require('bcrypt');
 
+const Budget = require('./Budget');
+const Expense = require('./Expense');
+
 const userSchema = new Schema({
     username: {
         type: String,
@@ -19,6 +22,16 @@ const userSchema = new Schema({
         // validator?
         minLength: 6,
     },
+    budgets: [{ 
+        type: Schema.Types.ObjectId, 
+        ref: 'Budget'
+              }],
+              
+    expenses: [{ 
+        type: Schema.Types.ObjectId, 
+        ref: 'Expense' 
+               }],
+
 });
 
 userSchema.pre('save', async function (next) {

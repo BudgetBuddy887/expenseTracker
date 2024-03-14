@@ -11,6 +11,9 @@ const budgetSchema = new Schema({
     category: {
         type: String,
     },
+   description: {
+        type: String,
+    },
 });
 
 const Budget = model('Budget', budgetSchema);
