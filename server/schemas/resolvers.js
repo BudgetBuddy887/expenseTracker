@@ -1,4 +1,5 @@
 const { Budget, Expense, User } = require('../models');
+const { signToken, AuthenticationError } = require('../utils/auth');
 
 const resolvers = {
   Query: {
@@ -25,15 +26,32 @@ const resolvers = {
     },
     Mutation: {
     addUser: async (parent, { username, email, password }) => {
-     return await User.create ({ username, email, password });
+      const user = await User.create ({ username, email, password });
+      const token = signToken(user);
+      return { token, user };
     },
-    // updateUserName(parent.args){
-    //   const {id, }
+    login: async (parent, { email, password }) => {
+      const user = await User.findOne({ email });
+      if (!user) {
+        throw AuthenticationError;
+      }
+
+      const correctPw = await user.isCorrectPassword(password);
+      if (!correctPw) {
+        throw AuthenticationError;
+      }
+
+      const token = signToken(user);
+      return { token, user };
+    }
+    // addBudget: async (parent, { description, amount, category, createdAt }) => {
+    //   return await User.create ({ description, amount, category, createdAt });
     // },
-    // addBudget
     // updateBudget
     // deleteBudget
-    // addExpense
+    // addExpense: async (parent, { description, amount, expenseDate, category, company, isRecurring, createdAt }) => {
+    //   return await User.create ({ description, amount, expenseDate, category, company, isRecurring, createdAt });
+    // }
     // updateExpense
     // deleteExpense
   }
