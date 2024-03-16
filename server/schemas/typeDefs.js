@@ -14,17 +14,11 @@ const typeDefs = gql`
     createdAt: Date!
   }
 
-  type Category {
-    _id: ID!
-    category: String!
-  }
-
   type Expense {
     _id: ID!
     description: String!
     amount: Float!
     expenseDate: Date!
-    category: Category!
     company: String!
     isRecurring: Boolean!
     createdAt: Date!
@@ -34,7 +28,6 @@ const typeDefs = gql`
     _id: ID!
     description: String!
     amount: Float!
-    category: Category!
     createdAt: Date!
   }
 
@@ -45,7 +38,6 @@ const typeDefs = gql`
 
   type Query {
     user: [User]
-    category: [Category]
     expense: [Expense]
     budget: [Budget]
     auth: [Auth]
@@ -54,7 +46,24 @@ const typeDefs = gql`
   type Mutation {
     addUser(username:String!, email:String!, password:String!): Auth
     login(email: String!, password: String!): Auth
-
+    addBudget (budgetId: ID!, description: String!, amount: Float!, createdAt: Date!): Budget
+    updateBudget(budgetId: ID!, description: String, amount: Float, createdAt: Date): Budget
+    deleteBudget(budgetId: ID!): Budget
+    addExpense(expenseId: ID!, 
+      description: String!,
+      amount: Float!
+      expenseDate: Date!
+      company: String!
+      isRecurring: Boolean!
+      createdAt: Date!): Expense
+    updateExpense(expenseId: ID!, 
+      description: String,
+      amount: Float
+      expenseDate: Date
+      company: String
+      isRecurring: Boolean
+      createdAt: Date): Expense
+    deleteExpense(expenseId: ID!): Expense
   }
 
 `;
