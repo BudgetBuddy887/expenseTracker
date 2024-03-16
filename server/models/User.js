@@ -1,9 +1,6 @@
 const { Schema, model } = require('mongoose');
 const bcrypt = require('bcrypt');
 
-const Budget = require('./Budget');
-const Expense = require('./Expense');
-
 const userSchema = new Schema({
     username: {
         type: String,
@@ -19,19 +16,16 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: true,
-        // validator?
         minLength: 6,
     },
-    budgets: [{ 
-        type: Schema.Types.ObjectId, 
+    budgets: [{
+        type: Schema.Types.ObjectId,
         ref: 'Budget'
-              }],
-              
-    expenses: [{ 
-        type: Schema.Types.ObjectId, 
-        ref: 'Expense' 
-               }],
-
+    }],
+    spendings: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Spending'
+    }],
 });
 
 userSchema.pre('save', async function (next) {
@@ -39,7 +33,7 @@ userSchema.pre('save', async function (next) {
         const saltRounds = 10;
         this.password = await bcrypt.hash(this.password, saltRounds);
     }
-    next()
+    next();
 });
 
 userSchema.methods.isCorrectPassword = async function (password) {

@@ -1,18 +1,28 @@
 const { Schema, model } = require('mongoose');
 
+const dateFormat = require('../utils/dateFormat');
+
 const budgetSchema = new Schema({
-    // Set outgoing money goal
-    // Option to limit to 2 decimal places
     amount: {
         type: Number,
         required: true,
+        min: 0,
+        get: v => parseFloat(v.toFixed(2)),
+        set: v => parseFloat(v.toFixed(2)),
     },
-    // Selection/create new tag to easily identify type of spending
     category: {
         type: String,
+        required: true,
+        trim: true,
     },
-   description: {
+    description: {
         type: String,
+        trim: true,
+    },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
     },
 });
 
