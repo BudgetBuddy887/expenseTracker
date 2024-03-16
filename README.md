@@ -7,7 +7,7 @@ As a Financial inteligent person, i want to be able to track my daily, weekly an
 ## Acceptance criteria
 
 ```md
-WHEN I land on the ExpenseTracker Homepage, I am present with sample data dispaly of tracked expenses, and Login / SignUp options
+WHEN I land on the ExpenseTracker Homepage, I am present with sample data display of tracked expenses, and Login / SignUp options
 WHEN I click on the Login/Signup menu option
 THEN a modal appears on the screen with a toggle between the option to log in or sign up
 WHEN the toggle is set to Signup
