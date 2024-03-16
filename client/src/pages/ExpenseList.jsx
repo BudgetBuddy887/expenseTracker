@@ -1,4 +1,8 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
+import { CREATE_EXPENSE } from '../utils/mutations';
+// import {  QUERY_ME } from '../../utils/queries';
 import {
     Table,
     Thead,
@@ -33,8 +37,8 @@ import {
 
 const ExpenseList = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [formState, setFormState] = useState({ amount:0, description:'', category: '', vendor: '', date:''});
-
+  const [formState, setFormState] = useState({ amount:0, description:'', category: '', company: '', date:''});
+  const [createExpense] = useMutation (CREATE_EXPENSE);
   // update state based on form input changes
   const handleFormChange = (event) => {
     const { name, value } = event.target;
@@ -45,9 +49,20 @@ const ExpenseList = () => {
     });
   };
   
-  function handleFormSubmit(e){
+  const handleAddExpense = async (e) => {
     e.preventDefault();
-    alert(formState.amount);
+    alert('add expense button click');
+    console.log(formState);
+    try {
+      const userData = await createExpense({ variables: { 
+        expenseData: {...formState}
+      } });
+
+      console.log(userData);
+      
+    } catch (e) {
+      console.error("Error occurred while adding expense: " + e);
+    }
   }
 
   function editExpense(e){
@@ -121,7 +136,7 @@ const ExpenseList = () => {
               </Grid>
                            
               <Modal isOpen={isOpen} onClose={onClose}>
-                <form onSubmit={handleFormSubmit}>
+                <form onSubmit={handleAddExpense}>
                   <ModalOverlay />
                   <ModalContent>
                     <ModalHeader>Add New Expense</ModalHeader>
@@ -146,10 +161,10 @@ const ExpenseList = () => {
                         />
                       </FormControl>
                       <FormControl>
-                        <FormLabel>Vendor</FormLabel>
+                        <FormLabel>Comapny</FormLabel>
                         <Input
                           placeholder="i.e. Sainsbury, Tesco, Amazon"
-                          name="location"
+                          name="company"
                           type="text"
                           onChange={handleFormChange}
                         />

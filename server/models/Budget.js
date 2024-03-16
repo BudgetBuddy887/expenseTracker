@@ -4,7 +4,7 @@ const dateFormat = require('../utils/dateFormat');
 
 const budgetSchema = new Schema({
     amount: {
-        type: Number,
+        type: String,
         required: true,
         min: 0,
         get: v => parseFloat(v.toFixed(2)),
@@ -26,6 +26,4 @@ const budgetSchema = new Schema({
     },
 });
 
-const Budget = model('Budget', budgetSchema);
-
-module.exports = Budget;
+module.exports = budgetSchema;
