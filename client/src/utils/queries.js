@@ -9,6 +9,20 @@ export const GET_ME = gql`
         expenses
         budget
     }
-}
+  }
+
+`;
+
+export const QUERY_USER_DATA = gql`
+  query getUserData {
+    userData {
+        _id
+        username
+        email
+        expenses
+        budgets
+    }
+  }
+
 `;
 

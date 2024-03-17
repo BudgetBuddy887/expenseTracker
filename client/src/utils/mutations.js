@@ -32,6 +32,25 @@ export const CREATE_EXPENSE = gql`
   }
 `;
 
+export const UPDATE_EXPENSE = gql`
+  mutation updateExpense($expenseData: ExpenseInput!) {
+    updateExpense(expenseData: $expenseData) {
+      _id
+    }
+  }
+`;
+
+
+export const DELETE_EXPENSE = gql`
+  mutation deleteExpense($expenseId: String!) {
+    deleteExpense(expenseId: $expenseId) {
+      _id
+    }
+  }
+`;
+
+
+
 // export const CREATE_USER = gql`
 // mutation createUser($email: String!, $password: String!, $username: String!) {
 //   createUser(email: $email, password: $password, username: $username) {

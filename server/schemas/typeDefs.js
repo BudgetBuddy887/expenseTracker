@@ -29,6 +29,7 @@ const typeDefs = gql`
     }
 
     input ExpenseInput {
+        id: ID!
         description: String!
         amount: Float!
         date: String!
@@ -43,12 +44,15 @@ const typeDefs = gql`
 
     type Query {
         me:User
+        userData : User
     }
 
     type Mutation {
         login(email:String!, password:String!): Auth
         addUser(username:String!, email:String!, password:String!): Auth
         createExpense(expenseData: ExpenseInput!): User
+        updateExpense(expenseData: ExpenseInput!): User
+        deleteExpense(expenseId: String!): Expense
     }`;
 
     module.exports = typeDefs;

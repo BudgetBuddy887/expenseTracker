@@ -13,6 +13,19 @@ const resolvers = {
       console.log('Use is logged out or has not logged in');
       throw new AuthenticationError('Not logged in');
     },
+
+    userData: async (parent, args, context) => {
+      try {
+        if (context.user.username) {
+          console.log('Get user data : ' + context.user._id);
+          const userData = await User.findById(context.user._id).populate('expenses').populate('budgets')
+          console.log('Get user data : ' + JSON.stringify(user));
+          return userData;
+        }
+      } catch (error) {
+        throw new Error('no user');
+      }
+    }
   },
 
   Mutation: {
@@ -67,24 +80,57 @@ const resolvers = {
       }
       catch (err) {console.log('Error while adding expense: ' + err);}
     },
+
+    updateExpense: async (parent, {expenseData}, context) => {
+      try{
+        if (context.user.username) {
+          console.log(context.user._id);
+          console.log(JSON.stringify(expenseData));
+          const expense = await Expense.updateOne(
+            { _id: expenseData.id},
+            {
+              description: expenseData.description,
+              category: expenseData.category,
+              company: expenseData.company,
+              date: expenseData.date,
+              amount: expenseData.amount
+            }
+          );
+          console.log("Updated expense : " + JSON.stringify(expense));
+          const updatedUser = await User.findByIdAndUpdate(
+            { _id: context.user._id  },
+          );
+          console.log('Expense updated successfully :' + JSON.stringify(updatedUser));
+          return updatedUser;
+        }
+      }
+      catch (err) {console.log('Error while adding expense: ' + err);}
+    },
+    
+    deleteExpense : async(parent, {expenseId}, context) =>{
+      try{
+        console.log('Deleting expense : ' + expenseId);
+        const deletedExpense = await Expense.findByIdAndDelete(expenseId);
+        console.log('Expense deleted : ' + deletedExpense);
+        if(deletedExpense){
+          const updatedUser = await User.findByIdAndUpdate(
+            { _id: context.user._id  },
+            { $pull: { expenses: expenseId } },
+            { new: true }
+          );
+          console.log("Updated user after expense id " + expenseId + " is deleted: " + updatedUser);
+        }
+        return deletedExpense;
+      } catch (err) {
+        console.log('Error while deleting expense: ' + expenseId + ' : ' + err);
+      }
+    }
   },
 };
 
 module.exports = resolvers;
 
 
-// const resolvers = {
-//   Query:
-//   {
-//     user: async (_, { id }) => {
-//       try {
-//         const user = await User.findById(id).populate('spendings').populate('budgets')
-//         return user;
-//       } catch (error) {
-//         throw new Error('no user');
-//       }
-//     },
-        
 //     budget: async (_, { id }) => {
 //       try {
 //         const budget = await Budget.findById(id)
