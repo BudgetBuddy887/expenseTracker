@@ -50,6 +50,7 @@ const typeDefs = gql`
         login(email:String!, password:String!): Auth
         addUser(username:String!, email:String!, password:String!): Auth
         createExpense(expenseData: ExpenseInput!): User
+        deleteExpense(expenseId: String!): Expense
     }`;
 
     module.exports = typeDefs;

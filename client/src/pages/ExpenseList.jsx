@@ -3,7 +3,7 @@ import { useState } from 'react';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
-import { CREATE_EXPENSE} from '../utils/mutations';
+import { CREATE_EXPENSE, DELETE_EXPENSE} from '../utils/mutations';
 import {QUERY_USER_DATA } from '../utils/queries';
 
 
@@ -13,7 +13,7 @@ const ExpenseList = () => {
   //const { isOpen, onOpen, onClose } = useDisclosure()
   const [createExpense] = useMutation (CREATE_EXPENSE);
   const {loading, userData} = useQuery (QUERY_USER_DATA);
-
+  const [deleteExpense] = useMutation (DELETE_EXPENSE);
   const [showModal, setShowModal] = React.useState(false);
 
   const [userFormData, setUserFormData] = useState({ description:''});
@@ -53,60 +53,78 @@ const ExpenseList = () => {
   }
 
   function editExpense(e){
-    alert(e.target.key);
+    alert(e.target.getAttribute("controlId"));
+  }
+
+  const handleDeleteExpense = async (e) => {
+    
+    const id = e.target.getAttribute("controlId");
+    alert("Deleting expense : " + id);
+    
+    
+    try {
+      const deletedExepense = await deleteExpense({ variables: { 
+        expenseId: id
+      } });
+      console.log(deletedExepense);
+      
+    } catch (e) {
+      console.error("Error occurred while adding expense: " + e);
+    }
+
   }
 
   console.log("is loading data :" + loading);
   console.log(userData);
 
-  // const data = 
-  //   {
-  //     total: 230,
-  //     average: 20,
-  //     budget: 300,
-  //     expenses: [
-  //       {
-  //         id: '1',
-  //         description: "Grocessary",
-  //         amount: 9.99,
-  //         date: "2024-03-14",
-  //         category: "Expense",
-  //         location: "Tesco"
-  //       },
-  //       {
-  //         id: '2',
-  //         description: "Water bill",
-  //         amount: 49.99,
-  //         date: "2024-03-01",
-  //         category: "Household",
-  //         location: "Scotish Water"
-  //       },
-  //       {
-  //         id: '3',
-  //         description: "Electricity bill ",
-  //         amount: 170.00,
-  //         date: "2024-03-01",
-  //         category: "Household",
-  //         location: "Octopus"
-  //       },
-  //       {
-  //         id: '4',
-  //         description: "TV License",
-  //         amount: 12.99,
-  //         date: "2024-03-01",
-  //         category: "Entertainment",
-  //         location: "BBC"
-  //       },
-  //       {
-  //         id: '5',
-  //         description: "Gym",
-  //         amount: 29.99,
-  //         date: "2024-03-01",
-  //         category: "wellbeing",
-  //         location: "nuffield"
-  //       }
-  //     ]
-  //   }
+  const data = 
+    {
+      total: 230,
+      average: 20,
+      budget: 300,
+      expenses: [
+        {
+          id: '65f6c70ea45f34c5b59847fe',
+          description: "Grocessary",
+          amount: 9.99,
+          date: "2024-03-14",
+          category: "Expense",
+          location: "Tesco"
+        },
+        {
+          id: '65f6ef3664e4e7d2a4d7465a',
+          description: "Water bill",
+          amount: 49.99,
+          date: "2024-03-01",
+          category: "Household",
+          location: "Scotish Water"
+        },
+        {
+          id: '65f7011f0279b46ec489c2af',
+          description: "Electricity bill ",
+          amount: 170.00,
+          date: "2024-03-01",
+          category: "Household",
+          location: "Octopus"
+        },
+        {
+          id: '4',
+          description: "TV License",
+          amount: 12.99,
+          date: "2024-03-01",
+          category: "Entertainment",
+          location: "BBC"
+        },
+        {
+          id: '5',
+          description: "Gym",
+          amount: 29.99,
+          date: "2024-03-01",
+          category: "wellbeing",
+          location: "nuffield"
+        }
+      ]
+    }
 
   
     return (
@@ -133,25 +151,19 @@ const ExpenseList = () => {
               </tr>
             </thead>
             <tbody>
-              {loading ? (
-                <tr><td>Loading...</td></tr>
-              ) : (
-                <tr><td>data loaded</td></tr>
-                // {userData.expenses.map((e, index) => {
-                //   return (
-                //     <tr key={e.id}>
-                //       <td>{e.description}</td>                
-                //       <td>{e.category}</td>
-                //       <td>{e.location}</td>
-                //       <td>{e.date}</td>
-                //       <td >{e.amount}</td>
-                //       <th><Button key={e.id} onClick={editExpense} variant='outline-info'>Edit</Button></th>
-                //       <th><Button key={e.id} variant='outline-danger'>Delete</Button></th>
-                //     </tr>
-                //   );
-                // })}
-              )}
-              
+                {data.expenses.map((e, index) => {
+                   return (
+                     <tr key={e.id}>
+                       <td>{e.description}</td>                
+                       <td>{e.category}</td>
+                       <td>{e.location}</td>
+                       <td>{e.date}</td>
+                       <td >{e.amount}</td>
+                       <th><Button controlId={e.id} onClick={editExpense} variant='outline-info'>Edit</Button></th>
+                       <th><Button controlId={e.id} onClick={handleDeleteExpense} variant='outline-danger'>Delete</Button></th>
+                     </tr>
+                   );
+                 })}
             </tbody>
           </Table>
           <Modal

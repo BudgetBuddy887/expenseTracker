@@ -80,6 +80,25 @@ const resolvers = {
       }
       catch (err) {console.log('Error while adding expense: ' + err);}
     },
+    
+    deleteExpense : async(parent, {expenseId}, context) =>{
+      try{
+        console.log('Deleting expense : ' + expenseId);
+        const deletedExpense = await Expense.findByIdAndDelete(expenseId);
+        console.log('Expense deleted : ' + deletedExpense);
+        if(deletedExpense){
+          const updatedUser = await User.findByIdAndUpdate(
+            { _id: context.user._id  },
+            { $pull: { expenses: expenseId } },
+            { new: true }
+          );
+          console.log("Updated user after expense id " + expenseId + " is deleted: " + updatedUser);
+        }
+        return deletedExpense;
+      } catch (err) {
+        console.log('Error while deleting expense: ' + expenseId + ' : ' + err);
+      }
+    }
   },
 };
 
