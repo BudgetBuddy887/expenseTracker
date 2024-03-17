@@ -43,6 +43,7 @@ const typeDefs = gql`
 
     type Query {
         me:User
+        userData : User
     }
 
     type Mutation {

@@ -13,6 +13,19 @@ const resolvers = {
       console.log('Use is logged out or has not logged in');
       throw new AuthenticationError('Not logged in');
     },
+
+    userData: async (parent, args, context) => {
+      try {
+        if (context.user.username) {
+          console.log('Get user data : ' + context.user._id);
+          const userData = await User.findById(context.user._id).populate('expenses').populate('budgets')
+          console.log('Get user data : ' + JSON.stringify(user));
+          return userData;
+        }
+      } catch (error) {
+        throw new Error('no user');
+      }
+    }
   },
 
   Mutation: {
@@ -73,18 +86,6 @@ const resolvers = {
 module.exports = resolvers;
 
 
-// const resolvers = {
-//   Query:
-//   {
-//     user: async (_, { id }) => {
-//       try {
-//         const user = await User.findById(id).populate('spendings').populate('budgets')
-//         return user;
-//       } catch (error) {
-//         throw new Error('no user');
-//       }
-//     },
-        
 //     budget: async (_, { id }) => {
 //       try {
 //         const budget = await Budget.findById(id)
