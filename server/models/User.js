@@ -1,7 +1,7 @@
 const { Schema, model } = require('mongoose');
 const bcrypt = require('bcrypt');
 
-const spendingSchema = require('./Spending');
+const spendingSchema = require('./Expense');
 const budgetSchema = require('./Budget');
 
 const userSchema = new Schema(
@@ -21,7 +21,12 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    expenses: [spendingSchema],
+    expenses: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Expense',
+      },
+    ],
     budget: [budgetSchema]
     
   },

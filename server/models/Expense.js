@@ -1,7 +1,7 @@
 const { Schema, model } = require('mongoose');
 const dateFormat = require('../utils/dateFormat');
 
-const spendingSchema = new Schema({
+const expenseSchema = new Schema({
     description: {
         type: String,      
         required: true,
@@ -39,6 +39,7 @@ const spendingSchema = new Schema({
     }
 });
 
-//const Spending = model('Spending', spendingSchema);
+const Expense = model('Expense', expenseSchema);
 
-module.exports = spendingSchema;
+module.exports = Expense;
+

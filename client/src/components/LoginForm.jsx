@@ -29,6 +29,7 @@ const LoginForm = (props) => {
       });
 
       Auth.login(data.login.token);
+      localStorage.setItem('user', JSON.stringify(data));
     } catch (e) {
       console.error(e);
     }

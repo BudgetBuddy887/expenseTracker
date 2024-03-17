@@ -1,64 +1,49 @@
 import { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { CREATE_EXPENSE } from '../utils/mutations';
-// import {  QUERY_ME } from '../../utils/queries';
-import {
-    Table,
-    Thead,
-    Tbody,
-    Tfoot,
-    Tr,
-    Th,
-    Td,
-    TableCaption,
-    TableContainer,
-    Button, 
-    ButtonGroup, 
-    Box, 
-    Stack, 
-    useDisclosure,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader, 
-    ModalCloseButton,
-    ModalBody,
-    ModalFooter,
-    FormControl,
-    FormLabel,
-    Input,
-    Text,
-    GridItem,
-    Grid,
-    Divider
-
-  } from '@chakra-ui/react'
+import {Table, Button, Modal, Container, Row, Col, Form, Tab, Nav} from 'react-bootstrap';
+import Expense from '../components/Expense';
 
 const ExpenseList = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const [formState, setFormState] = useState({ amount:0, description:'', category: '', company: '', date:''});
+  //const { isOpen, onOpen, onClose } = useDisclosure()
   const [createExpense] = useMutation (CREATE_EXPENSE);
-  // update state based on form input changes
-  const handleFormChange = (event) => {
-    const { name, value } = event.target;
 
-    setFormState({
-      ...formState,
-      [name]: value,
-    });
+  const [showModal, setShowModal] = React.useState(false);
+
+  const [userFormData, setUserFormData] = useState({ description:''});
+
+  const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("");
+  const [company, setCompany] = useState("");
+  const [amount, setAmount] = useState("");
+  const [date, setDate] = useState("");
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setUserFormData({ ...userFormData, [name]: value });
+    console.log(name + ' : ' + value);
   };
-  
+
+
+
   const handleAddExpense = async (e) => {
     e.preventDefault();
-    alert('add expense button click');
-    console.log(formState);
+    //alert(description + ' : ' + category + ' : ' + company + ' : ' + amount + ' : ' + date);
+    const exepenseInput = {description: description, company: company, amount: amount, category: category, date: date}
+    
+    //alert(JSON.stringify(exepenseInput));
+    
     try {
       const userData = await createExpense({ variables: { 
-        expenseData: {...formState}
+        expenseData: exepenseInput
       } });
-
+      setModalShow(false);
       console.log(userData);
+      setUserFormData({
+        description: ''
+      });
       
     } catch (e) {
       console.error("Error occurred while adding expense: " + e);
@@ -117,122 +102,184 @@ const ExpenseList = () => {
         }
       ]
     }
+
+    function MyVerticallyCenteredModal(props) {
+      return (
+        <Modal
+          {...props}
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title id="contained-modal-title-vcenter">
+              Add New Expense
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Row className="mb-3">
+              <Form.Group as={Col} >
+                <Form.Label>Description</Form.Label>
+                <Form.Control 
+                type='text'
+                name='description'
+                placeholder='Description'
+                onChange={handleInputChange}
+                value={userFormData.description} />
+              </Form.Group>
+
+              <Form.Group as={Col} controlId="formGridCategory">
+                <Form.Label>Category</Form.Label>
+                <Form.Control type="text" 
+                placeholder="i.e. Household, Electricity, Water"
+                onChange={(e) => setCategory(e.target.value)}
+                value={category} />
+              </Form.Group>
+            </Row>
+            <Row className="mb-3">
+              <Form.Group as={Col} controlId="formGridCompany">
+                <Form.Label>Company</Form.Label>
+                <Form.Control type="text" 
+                placeholder="i.e. Tesco, Sainsbury, Amazon" 
+                onChange={(e) => setCompany(e.target.value)}
+                value={company}/>
+              </Form.Group>
+
+              <Form.Group as={Col} controlId="formGridAmount">
+                <Form.Label>Amount</Form.Label>
+                <Form.Control type="number" 
+                placeholder="Amount" 
+                onChange={(e) => setAmount(e.target.value)}
+                value={amount}/>
+              </Form.Group>
+            </Row>
+            <Row className="mb-3">
+              <Form.Group as={Col} controlId="formGridDate">
+                <Form.Label>Date</Form.Label>
+                <Form.Control type="date" 
+                placeholder="Enter email" 
+                onChange={(e) => setDate(e.target.value)}
+                value={date}/>
+              </Form.Group>
+            </Row>
+
+          </Modal.Body>
+          <Modal.Footer>
+            {/* <Button onClick={props.onHide}>Close</Button>
+            <Button type="submit" variant="info">Submit</Button>{' '} */}
+            <Button  onClick={handleAddExpense} variant='success'>Save</Button>
+          </Modal.Footer>
+        </Modal>
+      );
+    }
+    
   
     return (
         <>
-          <Stack direction='column'>
-            <Box>
-              <Grid templateColumns='repeat(1, 1fr)' gap={6}>
-                <GridItem w='100%' h='10' textAlign='center' fontSize='3xl'  >Expense View</GridItem>
-              </Grid>
-              <br></br>
-              <Divider></Divider>
-              <Grid templateColumns='repeat(4, 1fr)' gap={6}>
-                <GridItem w='100%' h='10'  >Total Expense</GridItem>
-                <GridItem w='100%' h='10'  >Daily Average</GridItem>
-                <GridItem w='100%' h='10'  >Budget</GridItem>
-                <GridItem w='100%' h='10' ><Button onClick={onOpen} colorScheme='teal' textAlign='left'>Add Expense </Button></GridItem>
-             
-              </Grid>
-                           
-              <Modal isOpen={isOpen} onClose={onClose}>
-                <form onSubmit={handleAddExpense}>
-                  <ModalOverlay />
-                  <ModalContent>
-                    <ModalHeader>Add New Expense</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                      <FormControl>
-                        <FormLabel>Description</FormLabel>
-                        <Input
-                          placeholder="Enter transaction description"
-                          name="description"
-                          type="text"
-                          onChange={handleFormChange}
-                        />
-                      </FormControl>
-                      <FormControl>
-                        <FormLabel>Category</FormLabel>
-                        <Input
-                          placeholder="i.e. Household, Electricity, Water, Entertainment"
-                          name="category"
-                          type="text"
-                          onChange={handleFormChange}
-                        />
-                      </FormControl>
-                      <FormControl>
-                        <FormLabel>Comapny</FormLabel>
-                        <Input
-                          placeholder="i.e. Sainsbury, Tesco, Amazon"
-                          name="company"
-                          type="text"
-                          onChange={handleFormChange}
-                        />
-                      </FormControl>
-                      <FormControl>
-                        <FormLabel>Expense Date</FormLabel>
-                        <Input
-                          placeholder="Enter transaction Date"
-                          name="date"
-                          type="date"
-                          onChange={handleFormChange}
-                        />
-                      </FormControl>
-                      <FormControl mt={"15px"}>
-                        <FormLabel>Enter Amount</FormLabel>
-                        <Input
-                          placeholder="Enter transaction amount"
-                          name="amount"
-                          type="number"
-                          onChange={handleFormChange}
-                        />
-                      </FormControl>
-    
-                    </ModalBody>
-                    <ModalFooter>
-                      <Button mr={"4"} onClick={onClose}>
-                        Cancel
-                      </Button>
-                      <Button onClick={onClose} type="submit">Add</Button>
-                    </ModalFooter>
-                  </ModalContent>
-                </form>
-              </Modal>
-              </Box>
-            <Box >
-              <TableContainer>
-                <Table  size='sm'>
-                  <TableCaption>Expense Vs Budget View</TableCaption>
-                  <Thead>
-                    <Tr>       
-                      <Th>Description</Th>
-                      <Th>Category</Th>
-                      <Th>Location</Th>
-                      <Th >Date</Th>
-                      <Th isNumeric>Amount</Th> 
-                      <Th></Th>       
-                      <Th></Th> 
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {data.expenses.map((e, index) => {
-                      return (
-                        <Tr key={e.id}>
-                          <Td>{e.description}</Td>                
-                          <Td>{e.category}</Td>
-                          <Td>{e.location}</Td>
-                          <Td>{e.date}</Td>
-                          <Td isNumeric>{e.amount}</Td>
-                          <Th><Button key={e.id} onClick={editExpense} colorScheme='green' variant='outline'>Edit</Button></Th>
-                          <Th><Button key={e.id} colorScheme='red' variant='outline'>Delete</Button></Th>
-                        </Tr>
-                      );
-                    })}
-                  </Tbody>    
-                </Table>
-              </TableContainer>
-            </Box>
-          </Stack>
+        <Container>
+          <Row>
+            <Col>My Expenses</Col>
+            <Col>
+              <Button variant="primary" onClick={() => setShowModal(true)}>
+                Add Expense
+              </Button>
+              {/* <MyVerticallyCenteredModal
+                show={showModal}
+                onHide={() => setShowModal(false)}
+              /> */}
+            </Col>
+          </Row>
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Location</th>
+                <th>Date</th>
+                <th>Amount</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.expenses.map((e, index) => {
+                return (
+                  <tr key={e.id}>
+                    <td>{e.description}</td>                
+                    <td>{e.category}</td>
+                    <td>{e.location}</td>
+                    <td>{e.date}</td>
+                    <td >{e.amount}</td>
+                    <th><Button key={e.id} onClick={editExpense} variant='outline-info'>Edit</Button></th>
+                    <th><Button key={e.id} variant='outline-danger'>Delete</Button></th>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </Table>
+          <Modal
+          size='lg'
+          show={showModal}
+          onHide={() => setShowModal(false)}
+          aria-labelledby='signup-modal'>
+            <Modal.Header closeButton>
+              <Modal.Title id="contained-modal-title-vcenter">
+                Add New Expense
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Row className="mb-3">
+                <Form.Group as={Col} >
+                  <Form.Label>Description</Form.Label>
+                  <Form.Control 
+                  type='text'
+                  name='description'
+                  placeholder='Description'
+                  onChange={(e) => setDescription(e.target.value)}
+                  value={description} />
+                </Form.Group>
+
+                <Form.Group as={Col} controlId="formGridCategory">
+                  <Form.Label>Category</Form.Label>
+                  <Form.Control type="text" 
+                  placeholder="i.e. Household, Electricity, Water"
+                  onChange={(e) => setCategory(e.target.value)}
+                  value={category} />
+                </Form.Group>
+              </Row>
+              <Row className="mb-3">
+                <Form.Group as={Col} controlId="formGridCompany">
+                  <Form.Label>Company</Form.Label>
+                  <Form.Control type="text" 
+                  placeholder="i.e. Tesco, Sainsbury, Amazon" 
+                  onChange={(e) => setCompany(e.target.value)}
+                  value={company}/>
+                </Form.Group>
+
+                <Form.Group as={Col} controlId="formGridAmount">
+                  <Form.Label>Amount</Form.Label>
+                  <Form.Control type="number" 
+                  placeholder="Amount" 
+                  onChange={(e) => setAmount(e.target.value)}
+                  value={amount}/>
+                </Form.Group>
+              </Row>
+              <Row className="mb-3">
+                <Form.Group as={Col} controlId="formGridDate">
+                  <Form.Label>Date</Form.Label>
+                  <Form.Control type="date" 
+                  placeholder="Enter email" 
+                  onChange={(e) => setDate(e.target.value)}
+                  value={date}/>
+                </Form.Group>
+              </Row>
+
+            </Modal.Body>
+            <Modal.Footer>
+              <Button  onClick={handleAddExpense} variant='success'>Save</Button>
+            </Modal.Footer>
+          </Modal>
+        </Container>
         </>
     )
 };

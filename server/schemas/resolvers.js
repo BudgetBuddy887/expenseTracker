@@ -1,5 +1,5 @@
 const { AuthenticationError } = require('apollo-server-express');
-const { User, Book } = require('../models');
+const { User, Expense } = require('../models');
 const { signToken } = require('../utils/auth');
 
 const resolvers = {
@@ -50,15 +50,22 @@ const resolvers = {
     },
 
     createSpending: async (parent, {expenseData}, context) => {
-      if (context.user.username) {
-        const updatedUser = await User.findByIdAndUpdate(
-          { _id: context.user._id  },
-          { $push: { spendings: expenseData } },
-          { new: true }
-        );
-          console.log('Expense Added Successfully');
-        return updatedUser;
+      try{
+        if (context.user.username) {
+          console.log(context.user._id);
+          console.log(JSON.stringify(expenseData));
+          const expense = await Expense.create(expenseData);
+          console.log(JSON.stringify(expense));
+          const updatedUser = await User.findByIdAndUpdate(
+            { _id: context.user._id  },
+            { $addToSet: { expenses: expense._id } },
+            { new: true }
+          );
+          console.log('Expense Added Successfully :' + JSON.stringify(updatedUser));
+          return updatedUser;
+        }
       }
+      catch (err) {console.log('Error while adding expense: ' + err);}
     },
   },
 };
