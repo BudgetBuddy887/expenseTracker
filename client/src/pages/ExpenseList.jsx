@@ -3,7 +3,7 @@ import { useState } from 'react';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
-import { CREATE_EXPENSE, DELETE_EXPENSE} from '../utils/mutations';
+import { CREATE_EXPENSE, DELETE_EXPENSE, UPDATE_EXPENSE} from '../utils/mutations';
 import {QUERY_USER_DATA } from '../utils/queries';
 
 
@@ -12,17 +12,19 @@ import {Table, Button, Modal, Container, Row, Col, Form, Tab, Nav} from 'react-b
 const ExpenseList = () => {
   //const { isOpen, onOpen, onClose } = useDisclosure()
   const [createExpense] = useMutation (CREATE_EXPENSE);
+  const [updateExpense] = useMutation (UPDATE_EXPENSE);
   const {loading, userData} = useQuery (QUERY_USER_DATA);
   const [deleteExpense] = useMutation (DELETE_EXPENSE);
   const [showModal, setShowModal] = React.useState(false);
 
   const [userFormData, setUserFormData] = useState({ description:''});
-
+  const [id, setId] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [company, setCompany] = useState("");
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState("");
+  const [isEdit, setIsEdit] = useState(false);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -30,19 +32,36 @@ const ExpenseList = () => {
     console.log(name + ' : ' + value);
   };
 
-  const handleAddExpense = async (e) => {
+  const handleExpense = async (e) => {
     e.preventDefault();
     alert(description + ' : ' + category + ' : ' + company + ' : ' + amount + ' : ' + date);
-    const exepenseInput = {description: description, company: company, amount: Number.parseFloat(amount), category: category, date: date}
+
+    const exepenseInput = {
+      id: id,
+      description: description, 
+      company: company, 
+      amount: Number.parseFloat(amount), 
+      category: category, 
+      date: date
+    }
     
     alert(JSON.stringify(exepenseInput));
     
     try {
-      const userData = await createExpense({ variables: { 
-        expenseData: exepenseInput
-      } });
+      if(isEdit) {
+         const updatedExpense = await updateExpense({ variables: { 
+          expenseData: exepenseInput
+        } });
+        setIsEdit(false);
+        console.log("updated expense: " + updatedExpense);
+      }else {
+         const addedExepense = await createExpense({ variables: { 
+          expenseData: exepenseInput
+        } });
+        console.log("added expense" + addedExepense);
+      }
+      
       setShowModal(false);
-      console.log(userData);
       setUserFormData({
         description: ''
       });
@@ -53,7 +72,15 @@ const ExpenseList = () => {
   }
 
   function editExpense(e){
-    alert(e.target.getAttribute("controlId"));
+    const id = e.target.getAttribute("controlId");
+    setId(id);
+    setIsEdit(true);
+    setDescription(document.getElementById('description' + id).innerHTML);
+    setCategory(document.getElementById('category' + id).innerHTML);
+    setCompany(document.getElementById('company' + id).innerHTML);
+    setDate(document.getElementById('date' + id).innerHTML);
+    setAmount(document.getElementById('amount' + id).innerHTML);
+    setShowModal(true);
   }
 
   const handleDeleteExpense = async (e) => {
@@ -116,12 +143,12 @@ const ExpenseList = () => {
           location: "BBC"
         },
         {
-          id: '5',
-          description: "Gym",
-          amount: 29.99,
+          id: '65f724bf2ea7969739f5f0e1',
+          description: "Mortgage",
+          amount: 1900,
           date: "2024-03-01",
-          category: "wellbeing",
-          location: "nuffield"
+          category: "Household",
+          location: "HSBC"
         }
       ]
     }
@@ -133,7 +160,15 @@ const ExpenseList = () => {
           <Row>
             <Col>My Expenses</Col>
             <Col>
-              <Button variant="primary" onClick={() => setShowModal(true)}>
+              <Button variant="primary" onClick={() => {
+                setIsEdit(false); 
+                setDescription("");
+                setCategory("");
+                setCompany("");
+                setDate("");
+                setAmount("");
+                setShowModal(true)}
+                }>
                 Add Expense
               </Button>
             </Col>
@@ -143,7 +178,7 @@ const ExpenseList = () => {
               <tr>
                 <th>Description</th>
                 <th>Category</th>
-                <th>Location</th>
+                <th>Company</th>
                 <th>Date</th>
                 <th>Amount</th>
                 <th></th>
@@ -154,13 +189,13 @@ const ExpenseList = () => {
                 {data.expenses.map((e, index) => {
                    return (
                      <tr key={e.id}>
-                       <td>{e.description}</td>                
-                       <td>{e.category}</td>
-                       <td>{e.location}</td>
-                       <td>{e.date}</td>
-                       <td >{e.amount}</td>
-                       <th><Button controlId={e.id} onClick={editExpense} variant='outline-info'>Edit</Button></th>
-                       <th><Button controlId={e.id} onClick={handleDeleteExpense} variant='outline-danger'>Delete</Button></th>
+                       <td id={"description" + e.id}>{e.description}</td>                
+                       <td id={"category" + e.id}>{e.category}</td>
+                       <td id={"company" + e.id}>{e.location}</td>
+                       <td id={"date" + e.id}>{e.date}</td>
+                       <td id={"amount" + e.id}>{e.amount}</td>
+                       <td><Button controlId={e.id} onClick={editExpense} variant='outline-info'>Edit</Button></td>
+                       <td><Button controlId={e.id} onClick={handleDeleteExpense} variant='outline-danger'>Delete</Button></td>
                      </tr>
                    );
                  })}
@@ -173,7 +208,7 @@ const ExpenseList = () => {
           aria-labelledby='signup-modal'>
             <Modal.Header closeButton>
               <Modal.Title id="contained-modal-title-vcenter">
-                Add New Expense
+                {isEdit ? 'Edit Expense' : 'Add New Expense'}
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -225,7 +260,7 @@ const ExpenseList = () => {
 
             </Modal.Body>
             <Modal.Footer>
-              <Button  onClick={handleAddExpense} variant='success'>Save</Button>
+              <Button  onClick={handleExpense} variant='success'>Save</Button>
             </Modal.Footer>
           </Modal>
         </Container>

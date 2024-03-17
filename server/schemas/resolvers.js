@@ -80,6 +80,32 @@ const resolvers = {
       }
       catch (err) {console.log('Error while adding expense: ' + err);}
     },
+
+    updateExpense: async (parent, {expenseData}, context) => {
+      try{
+        if (context.user.username) {
+          console.log(context.user._id);
+          console.log(JSON.stringify(expenseData));
+          const expense = await Expense.updateOne(
+            { _id: expenseData.id},
+            {
+              description: expenseData.description,
+              category: expenseData.category,
+              company: expenseData.company,
+              date: expenseData.date,
+              amount: expenseData.amount
+            }
+          );
+          console.log("Updated expense : " + JSON.stringify(expense));
+          const updatedUser = await User.findByIdAndUpdate(
+            { _id: context.user._id  },
+          );
+          console.log('Expense updated successfully :' + JSON.stringify(updatedUser));
+          return updatedUser;
+        }
+      }
+      catch (err) {console.log('Error while adding expense: ' + err);}
+    },
     
     deleteExpense : async(parent, {expenseId}, context) =>{
       try{

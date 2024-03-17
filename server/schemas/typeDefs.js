@@ -29,6 +29,7 @@ const typeDefs = gql`
     }
 
     input ExpenseInput {
+        id: ID!
         description: String!
         amount: Float!
         date: String!
@@ -50,6 +51,7 @@ const typeDefs = gql`
         login(email:String!, password:String!): Auth
         addUser(username:String!, email:String!, password:String!): Auth
         createExpense(expenseData: ExpenseInput!): User
+        updateExpense(expenseData: ExpenseInput!): User
         deleteExpense(expenseId: String!): Expense
     }`;
 
