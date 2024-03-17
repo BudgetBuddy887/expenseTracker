@@ -8,7 +8,7 @@ const typeDefs = gql`
         email: String!
         password: String!
         budgets: [Budget]
-        spendings: [Spending]
+        expense: [Expense]
     }
 
     type Budget {
@@ -19,7 +19,7 @@ const typeDefs = gql`
         user: User!
     }
 
-    type Spending {
+    type Expense {
         _id: ID!
         description: String!
         amount: String!
@@ -36,15 +36,6 @@ const typeDefs = gql`
         company: String!
     }
     
-    type Book{
-        bookId: String
-        authors: [String],
-        description: String!
-        title: String!
-        image: String
-        link: String
-    }
-    
     type Auth {
         token: ID!
         user: User
@@ -57,7 +48,7 @@ const typeDefs = gql`
     type Mutation {
         login(email:String!, password:String!): Auth
         addUser(username:String!, email:String!, password:String!): Auth
-        createSpending(expenseData: ExpenseInput!): User
+        createExpense(expenseData: ExpenseInput!): User
     }`;
 
     module.exports = typeDefs;

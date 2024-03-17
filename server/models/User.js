@@ -27,7 +27,11 @@ const userSchema = new Schema(
         ref: 'Expense',
       },
     ],
-    budget: [budgetSchema]
+    budgets: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Budget'
+     }],
     
   },
   // set this to use virtual below
