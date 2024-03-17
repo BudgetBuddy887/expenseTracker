@@ -8,7 +8,7 @@ const expenseSchema = new Schema({
         trim: true,
     },
     amount: {
-        type: String,
+        type: Number,
         required: true,
         min: 0,
         get: v => parseFloat(v.toFixed(2)),

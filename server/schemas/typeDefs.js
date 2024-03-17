@@ -13,7 +13,7 @@ const typeDefs = gql`
 
     type Budget {
         _id: ID!
-        amount: String!
+        amount: Float!
         category: String!
         description: String
         user: User!
@@ -22,7 +22,7 @@ const typeDefs = gql`
     type Expense {
         _id: ID!
         description: String!
-        amount: String!
+        amount: Float!
         date: String!
         category: String!
         user: User!
@@ -30,7 +30,7 @@ const typeDefs = gql`
 
     input ExpenseInput {
         description: String!
-        amount: String!
+        amount: Float!
         date: String!
         category: String!
         company: String!
