@@ -8,7 +8,7 @@ const typeDefs = gql`
         email: String!
         password: String!
         budgets: [Budget]
-        expense: [Expense]
+        expenses: [Expense]
     }
 
     type Budget {
@@ -24,6 +24,7 @@ const typeDefs = gql`
         description: String!
         amount: Float!
         date: String!
+        company: String!
         category: String!
         user: User!
     }

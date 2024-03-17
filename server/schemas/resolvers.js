@@ -6,8 +6,9 @@ const resolvers = {
   Query: {
     me: async (parent, args, context) => {
       if (context.user.username) {
-        const userData = await User.findOne({ _id: context.user._id }).select('-__v -password');
-
+        console.log(context.user.username);
+        const userData = await User.findOne({ _id: context.user._id }).select('-__v -password').populate('expenses');
+        console.log(userData);
         return userData;
       }
       console.log('Use is logged out or has not logged in');
