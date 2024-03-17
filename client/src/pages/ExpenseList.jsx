@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { CREATE_EXPENSE } from '../utils/mutations';
 import {Table, Button, Modal, Container, Row, Col, Form, Tab, Nav} from 'react-bootstrap';
-import Expense from '../components/Expense';
 
 const ExpenseList = () => {
   //const { isOpen, onOpen, onClose } = useDisclosure()
@@ -30,16 +29,16 @@ const ExpenseList = () => {
 
   const handleAddExpense = async (e) => {
     e.preventDefault();
-    //alert(description + ' : ' + category + ' : ' + company + ' : ' + amount + ' : ' + date);
-    const exepenseInput = {description: description, company: company, amount: amount, category: category, date: date}
+    alert(description + ' : ' + category + ' : ' + company + ' : ' + amount + ' : ' + date);
+    const exepenseInput = {description: description, company: company, amount: Number.parseFloat(amount), category: category, date: date}
     
-    //alert(JSON.stringify(exepenseInput));
+    alert(JSON.stringify(exepenseInput));
     
     try {
       const userData = await createExpense({ variables: { 
         expenseData: exepenseInput
       } });
-      setModalShow(false);
+      setShowModal(false);
       console.log(userData);
       setUserFormData({
         description: ''

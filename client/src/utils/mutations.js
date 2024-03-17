@@ -25,8 +25,8 @@ export const LOGIN_USER = gql`
 `;
 
 export const CREATE_EXPENSE = gql`
-  mutation createSpending($expenseData: ExpenseInput!) {
-    createSpending(expenseData: $expenseData) {
+  mutation createExpense($expenseData: ExpenseInput!) {
+    createExpense(expenseData: $expenseData) {
       _id
     }
   }
