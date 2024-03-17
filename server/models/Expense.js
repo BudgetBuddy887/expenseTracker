@@ -1,20 +1,22 @@
 const { Schema, model } = require('mongoose');
 const dateFormat = require('../utils/dateFormat');
 
-const spendingSchema = new Schema({
+const expenseSchema = new Schema({
     description: {
         type: String,      
         required: true,
         trim: true,
     },
     amount: {
-        type: Number,
+        type: String,
         required: true,
         min: 0,
         get: v => parseFloat(v.toFixed(2)),
         set: v => parseFloat(v.toFixed(2)),
     },
     date: {
+    // When purchase made
+    // Needs formatting 
         type: Date,
         default: Date.now,
         
@@ -23,14 +25,21 @@ const spendingSchema = new Schema({
         type: String,
         required: true,
         trim: true,
-    },
-    user: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
+    }, 
+    // Selection/create new tag to easily identify vendor paid to
+    company: {
+        type: String,
         required: true,
+        trim: true,
     },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+        get: (timestamp) => dateFormat(timestamp),
+    }
 });
 
-const Spending = model('Spending', spendingSchema);
+const Expense = model('Expense', expenseSchema);
 
-module.exports = Spending;
+module.exports = Expense;
+

@@ -1,60 +1,54 @@
-const typeDefs = `
-scalar Date
+ const {gql} = require('apollo-server-express');
 
-type User {
-  _id: ID!
-  username: String!
-  email: String!
-  password: String!
-  budgets: [Budget]
-  spendings: [Spending]
-}
+ // typeDefs
+const typeDefs = gql`
+    type User {
+        _id: ID!
+        username: String!
+        email: String!
+        password: String!
+        budgets: [Budget]
+        expense: [Expense]
+    }
 
-type Budget {
-  _id: ID!
-  amount: Float!
-  category: String!
-  description: String
-  user: User!
-}
+    type Budget {
+        _id: ID!
+        amount: String!
+        category: String!
+        description: String
+        user: User!
+    }
 
-type Spending {
-  _id: ID!
-  description: String!
-  amount: Float!
-  date: Date!
-  category: String!
-  user: User!
-}
+    type Expense {
+        _id: ID!
+        description: String!
+        amount: String!
+        date: String!
+        category: String!
+        user: User!
+    }
 
-type Auth {
-  token: ID!
-  user: User!
-}
+    input ExpenseInput {
+        description: String!
+        amount: String!
+        date: String!
+        category: String!
+        company: String!
+    }
+    
+    type Auth {
+        token: ID!
+        user: User
+    }
 
-type Query {
-  user(id: ID!): User
-  budget(id: ID!): Budget
-  spending(id: ID!): Spending
-  userBudgets(userId: ID!): [Budget]
-  userSpendings(userId: ID!): [Spending]
-}
+    type Query {
+        me:User
+    }
 
-type Mutation {
-  createUser(username: String!, email: String!, password: String!): Auth
-  loginUser(email: String!, password: String!): Auth
-  
-  createBudget(amount: Float!, category: String!, description: String, userId: ID!): Budget
+    type Mutation {
+        login(email:String!, password:String!): Auth
+        addUser(username:String!, email:String!, password:String!): Auth
+        createExpense(expenseData: ExpenseInput!): User
+    }`;
 
-  updateBudget(budgetId: ID!, amount: Float, category: String, description: String): Budget
-
-  deleteBudget(budgetId: ID!): Boolean
-
-  createSpending(description: String!, amount: Float!, date: String!, category: String!, userId: ID!): Spending
-
-  updateSpending(spendingId: ID!, description: String, amount: Float, date: String, category: String): Spending
-  deleteSpending(spendingId: ID!): Boolean
-}
-
-`;
-module.exports = typeDefs;
+    module.exports = typeDefs;
