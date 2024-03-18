@@ -10,11 +10,35 @@ import {Table, Button, Modal, Container, Row, Col, Form, Tab, Nav} from 'react-b
 
 const Expense = () => {
   //const { isOpen, onOpen, onClose } = useDisclosure()
-  const [createExpense] = useMutation (CREATE_EXPENSE);
-  const [updateExpense] = useMutation (UPDATE_EXPENSE);
+ // refresh the page when updateing the field 
+  const [createExpense] = useMutation (CREATE_EXPENSE,{
+         refetchQueries: [
+        QUERY_ME,
+        'me'
+      ]
+
+  });
+  const [updateExpense] = useMutation (UPDATE_EXPENSE,{
+        refetchQueries: [
+      QUERY_ME,
+      'me'
+    ]
+});
+
+  
+  
+  ;
   const { loading, error, data } = useQuery(QUERY_ME);
 
-  const [deleteExpense] = useMutation (DELETE_EXPENSE);
+// refresh the page when updateing the field  
+  const [deleteExpense] = useMutation (DELETE_EXPENSE,{
+        refetchQueries: [
+        QUERY_ME,
+        'me'
+      ]
+
+  });
+
   const [showModal, setShowModal] = React.useState(false);
 
   const [userFormData, setUserFormData] = useState({ description:''});
@@ -225,7 +249,7 @@ const Expense = () => {
                 <Form.Group as={Col} controlId="formGridDate">
                   <Form.Label>Date</Form.Label>
                   <Form.Control type="date" 
-                  placeholder="Enter email" 
+                  placeholder="Enter date" 
                   onChange={(e) => setDate(e.target.value)}
                   value={date}/>
                 </Form.Group>
