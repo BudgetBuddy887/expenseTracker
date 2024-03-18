@@ -6,7 +6,7 @@ import { useMutation } from '@apollo/client';
 import { CREATE_EXPENSE, DELETE_EXPENSE, UPDATE_EXPENSE} from '../utils/mutations';
 import {QUERY_ME} from '../utils/queries';
 
-import {Table, Button, Modal, Container, Row, Col, Form, Tab, Nav} from 'react-bootstrap';
+import {Table, Button, Modal, Container, Row, Col, Form, Tab, Nav, Dropdown, DropdownButton} from 'react-bootstrap';
 
 const Expense = () => {
   //const { isOpen, onOpen, onClose } = useDisclosure()
@@ -127,17 +127,18 @@ const Expense = () => {
   const handleDeleteExpense = async (e) => {
     
     const id = e.target.getAttribute("controlId"); 
-    
     try {
       const deletedExepense = await deleteExpense({ variables: { 
         expenseId: id
       } });
       console.log(deletedExepense);
-      
     } catch (e) {
       console.error("Error occurred while adding expense: " + e);
     }
+  }
 
+  const handleSorting = async (e) => {
+    alert(e.target.getAttribute("id"));
   }
   
     return (
@@ -145,6 +146,16 @@ const Expense = () => {
         <Container>
           <Row>
             <Col>My Expenses</Col>
+            {loading ? <><Col>Calculating Total...</Col></> : <Col>Total: {data?  data.me.dashboard.sumExpense : 0}</Col>}
+            {loading ? <><Col>Calculating Top Spending...</Col></> : <Col>Top Spending: {data?  data.me.dashboard.maxExpense : 0}</Col>}
+            <Col>
+            <DropdownButton id="dropdown-item-button" title="-- Sort By --">
+              <Dropdown.Item as="button" id="latest" onClick={handleSorting}>Latest</Dropdown.Item>
+              <Dropdown.Item as="button" id="oldest" onClick={handleSorting}>Oldest</Dropdown.Item>
+              <Dropdown.Item as="button" id="highest" onClick={handleSorting}>Highest</Dropdown.Item>
+              <Dropdown.Item as="button" id="lowest" onClick={handleSorting}>Lowest</Dropdown.Item>
+            </DropdownButton>
+            </Col>
             <Col>
               <Button variant="primary" onClick={() => {
                 setIsEdit(false); 

@@ -14,6 +14,10 @@ export const QUERY_ME = gql`
         date
         amount
       }
+      dashboard{
+        sumExpense
+        maxExpense
+      }
     }
   }
 `;
