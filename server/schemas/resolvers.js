@@ -26,7 +26,33 @@ const resolvers = {
       } catch (error) {
         throw new Error('no user');
       }
-    }
+    },
+
+    getAllBudgetData: async (parent, args, context) => {
+      try {
+        if (context.user._id) {
+          console.log(`Get budget data from ${_id}`);
+          const budgetData = await Budget.findById(context.user._id).populate('budgets')
+          console.log('Get budget data : ' + JSON.stringify(budget));
+          return budgetData;
+        }
+      } catch (error) {
+        throw new Error('Problem retrieving budget');
+      }
+    },
+
+    getAllExpenseData: async (parent, args, context) => {
+      try {
+        if (context.user._id) {
+          console.log(`Get expense data from ${_id}`);
+          const expenseData = await Expense.findById(context.user._id).populate('expenses')
+          console.log('Get expense data : ' + JSON.stringify(expense));
+          return expenseData;
+        }
+      } catch (error) {
+        throw new Error('Problem retrieving expenses');
+      }
+    },
   },
 
   Mutation: {
@@ -59,7 +85,7 @@ const resolvers = {
       }
 
       const token = signToken(user);
-      console.log("Loging token " + JSON.stringify(token));
+      console.log("Logging token " + JSON.stringify(token));
       return { token, user };
     },
 
