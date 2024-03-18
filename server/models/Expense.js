@@ -19,7 +19,7 @@ const expenseSchema = new Schema({
     // Needs formatting 
         type: Date,
         default: Date.now,
-        
+        get: (timestamp) => dateFormat(timestamp),
     },
     category: {
         type: String,

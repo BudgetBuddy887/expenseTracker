@@ -4,16 +4,16 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { CREATE_EXPENSE, DELETE_EXPENSE, UPDATE_EXPENSE} from '../utils/mutations';
-import {QUERY_USER_DATA } from '../utils/queries';
-
+import {QUERY_ME} from '../utils/queries';
 
 import {Table, Button, Modal, Container, Row, Col, Form, Tab, Nav} from 'react-bootstrap';
 
-const ExpenseList = () => {
+const Expense = () => {
   //const { isOpen, onOpen, onClose } = useDisclosure()
   const [createExpense] = useMutation (CREATE_EXPENSE);
   const [updateExpense] = useMutation (UPDATE_EXPENSE);
-  const {loading, userData} = useQuery (QUERY_USER_DATA);
+  const { loading, error, data } = useQuery(QUERY_ME);
+
   const [deleteExpense] = useMutation (DELETE_EXPENSE);
   const [showModal, setShowModal] = React.useState(false);
 
@@ -25,36 +25,53 @@ const ExpenseList = () => {
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState("");
   const [isEdit, setIsEdit] = useState(false);
-
+  //const [expenseDataCache, setExpenseDataCache] = useState(undefined);
+  
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setUserFormData({ ...userFormData, [name]: value });
     console.log(name + ' : ' + value);
   };
 
-  const handleExpense = async (e) => {
-    e.preventDefault();
-    alert(description + ' : ' + category + ' : ' + company + ' : ' + amount + ' : ' + date);
-
-    const exepenseInput = {
-      id: id,
-      description: description, 
-      company: company, 
-      amount: Number.parseFloat(amount), 
-      category: category, 
-      date: date
+  function format (timestamp) {  
+    
+    const date = new Date(timestamp);
+    console.log(timestamp + ' : ' + date);
+    if (!(date instanceof Date)) {
+      throw new Error('Invalid "date" argument. You must pass a date instance')
     }
-    
-    alert(JSON.stringify(exepenseInput));
-    
+  
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+  
+    return `${year}-${month}-${day}`
+  }
+  const handleExpense = async (e) => {
+    e.preventDefault();    
     try {
       if(isEdit) {
+        const exepenseInput = {
+          id: id,
+          description: description, 
+          company: company, 
+          amount: Number.parseFloat(amount), 
+          category: category, 
+          date: date
+        };
          const updatedExpense = await updateExpense({ variables: { 
           expenseData: exepenseInput
         } });
         setIsEdit(false);
         console.log("updated expense: " + updatedExpense);
       }else {
+        const exepenseInput = {
+          description: description, 
+          company: company, 
+          amount: Number.parseFloat(amount), 
+          category: category, 
+          date: date
+        };
          const addedExepense = await createExpense({ variables: { 
           expenseData: exepenseInput
         } });
@@ -85,9 +102,7 @@ const ExpenseList = () => {
 
   const handleDeleteExpense = async (e) => {
     
-    const id = e.target.getAttribute("controlId");
-    alert("Deleting expense : " + id);
-    
+    const id = e.target.getAttribute("controlId"); 
     
     try {
       const deletedExepense = await deleteExpense({ variables: { 
@@ -100,59 +115,6 @@ const ExpenseList = () => {
     }
 
   }
-
-  console.log("is loading data :" + loading);
-  console.log(userData);
-
-  const data = 
-    {
-      total: 230,
-      average: 20,
-      budget: 300,
-      expenses: [
-        {
-          id: '65f6c70ea45f34c5b59847fe',
-          description: "Grocessary",
-          amount: 9.99,
-          date: "2024-03-14",
-          category: "Expense",
-          location: "Tesco"
-        },
-        {
-          id: '65f6ef3664e4e7d2a4d7465a',
-          description: "Water bill",
-          amount: 49.99,
-          date: "2024-03-01",
-          category: "Household",
-          location: "Scotish Water"
-        },
-        {
-          id: '65f7011f0279b46ec489c2af',
-          description: "Electricity bill ",
-          amount: 170.00,
-          date: "2024-03-01",
-          category: "Household",
-          location: "Octopus"
-        },
-        {
-          id: '4',
-          description: "TV License",
-          amount: 12.99,
-          date: "2024-03-01",
-          category: "Entertainment",
-          location: "BBC"
-        },
-        {
-          id: '65f724bf2ea7969739f5f0e1',
-          description: "Mortgage",
-          amount: 1900,
-          date: "2024-03-01",
-          category: "Household",
-          location: "HSBC"
-        }
-      ]
-    }
-
   
     return (
         <>
@@ -162,6 +124,7 @@ const ExpenseList = () => {
             <Col>
               <Button variant="primary" onClick={() => {
                 setIsEdit(false); 
+                setId("")
                 setDescription("");
                 setCategory("");
                 setCompany("");
@@ -186,19 +149,29 @@ const ExpenseList = () => {
               </tr>
             </thead>
             <tbody>
-                {data.expenses.map((e, index) => {
+              
+              {loading ? 
+              <tr>
+                <td> "Loading..."</td>
+                <td>{error? error.message : "No Error"}</td>
+              </tr>
+              : 
+              <>
+              {data && data.me && data.me.expenses && data.me.expenses.map((e, index) => {
                    return (
                      <tr key={e.id}>
-                       <td id={"description" + e.id}>{e.description}</td>                
-                       <td id={"category" + e.id}>{e.category}</td>
-                       <td id={"company" + e.id}>{e.location}</td>
-                       <td id={"date" + e.id}>{e.date}</td>
-                       <td id={"amount" + e.id}>{e.amount}</td>
-                       <td><Button controlId={e.id} onClick={editExpense} variant='outline-info'>Edit</Button></td>
-                       <td><Button controlId={e.id} onClick={handleDeleteExpense} variant='outline-danger'>Delete</Button></td>
+                       <td id={"description" + e._id}>{e.description}</td>                
+                       <td id={"category" + e._id}>{e.category}</td>
+                       <td id={"company" + e._id}>{e.company}</td>
+                       <td id={"date" + e._id}>{e.date}</td>
+                       <td id={"amount" + e._id}>{e.amount}</td>
+                       <td><Button controlId={e._id} onClick={editExpense} variant='outline-info'>Edit</Button></td>
+                       <td><Button controlId={e._id} onClick={handleDeleteExpense} variant='outline-danger'>Delete</Button></td>
                      </tr>
                    );
                  })}
+              </>}
+   
             </tbody>
           </Table>
           <Modal
@@ -267,4 +240,4 @@ const ExpenseList = () => {
         </>
     )
 };
-export default ExpenseList;
+export default Expense;

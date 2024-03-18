@@ -5,7 +5,7 @@ import * as React from 'react'
 
 //import { ChakraProvider } from '@chakra-ui/react'
 import App from './App.jsx'
-import ExpenseList from './pages/ExpenseList';
+import Expense from './pages/Expense';
 
 const router = createBrowserRouter([
   {
@@ -15,7 +15,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <ExpenseList/>
+        element: <Expense/>
       },
       // {
       //   path: '/Expense',
