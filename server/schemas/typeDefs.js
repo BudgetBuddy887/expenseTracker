@@ -30,7 +30,7 @@ const typeDefs = gql`
     }
 
     input ExpenseInput {
-        id: ID!
+        id: ID
         description: String!
         amount: Float!
         date: String!

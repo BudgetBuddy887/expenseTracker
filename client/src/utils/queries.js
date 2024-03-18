@@ -11,7 +11,7 @@ export const QUERY_ME = gql`
         description
         company
         category
-        date
+        createdAt
         amount
       }
     }
