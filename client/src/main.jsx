@@ -5,22 +5,28 @@ import * as React from 'react'
 
 //import { ChakraProvider } from '@chakra-ui/react'
 import App from './App.jsx'
-import Expense from './pages/Expense';
+import Budget from './pages/Budget.jsx'
+import Expense from './pages/Expense.jsx'
+import Home from './pages/Home.jsx'
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
-    //errorElement: <h1 className='display-2'>Wrong page!</h1>,
+    errorElement: <h1 className='display-2'>Wrong page!</h1>,
     children: [
       {
         index: true,
-        element: <Expense/>
+        element: <Home />,
       },
-      // {
-      //   path: '/Expense',
-      //   element: <ExpenseList/>,
-      // },
+      {
+        path: '/budget',
+        element: <Budget/>,
+      },
+      {
+        path: '/expenses',
+        element: <Expense/>,
+      },
     ]
   }
 ])

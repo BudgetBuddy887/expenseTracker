@@ -22,10 +22,10 @@ const AppNavbar = () => {
             <Nav className='ml-auto d-flex'>
               {Auth.loggedIn() ? (
                 <>
-                  <Nav.Link as={Link} to='/'>
+                  <Nav.Link as={Link} to='/Budget'>
                     Budget
                   </Nav.Link>
-                  <Nav.Link as={Link} to='/ExpenseList'>
+                  <Nav.Link as={Link} to='/expenses'>
                     Expense
                   </Nav.Link>
                   <Nav.Link onClick={Auth.logout}>Logout</Nav.Link>
