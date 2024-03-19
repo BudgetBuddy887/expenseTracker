@@ -124,6 +124,7 @@ function editExpense(e){
 
 const handleDeleteExpense = async (e) => {
   
+
   const id = e.target.getAttribute("controlId"); 
   try {
     const deletedExepense = await deleteExpense({ variables: { 
@@ -160,6 +161,7 @@ return (
               Total <Badge bg="secondary">{data && data.me && data.me.dashboard ? data.me.dashboard.sumExpense : 0}</Badge>
             </Button>
             </Col>
+
             <Col>Top Spending: {data && data.me && data.me.dashboard ? data.me.dashboard.maxExpense : 0}</Col>
           </>
         }
@@ -225,7 +227,6 @@ return (
                 );
               })}
           </>}
-
         </tbody>
       </Table>
       <Modal
