@@ -47,23 +47,32 @@ export const DELETE_EXPENSE = gql`
       _id
     }
   }
+`
+;
+
+export const CREATE_BUDGET = gql`
+  mutation createBudget($budgetData: BudgetInput!) {
+    createBudget(budgetData: $budgetData) {
+      _id
+    
+    }
+  }
+`;
+export const UPDATE_BUDGET = gql`
+  mutation updateBudget($budgetData: BudgetInput!) {
+    updateBudget(budgetData: $budgetData) {
+      _id
+    }
+  }
 `;
 
-
-
-// export const CREATE_USER = gql`
-// mutation createUser($email: String!, $password: String!, $username: String!) {
-//   createUser(email: $email, password: $password, username: $username) {
-//     token
-//     user {
-//       _id
-//       username
-//       email
-//       password
-//     }
-//   }
-// }`
-
+export const DELETE_BUDGET = gql`
+  mutation deleteBudget($budgetId: String!) {
+    deleteBudget(budgetId: $budgetId) {
+      _id
+    }
+  }
+`
 // export const ADD_EXPENSE = gql`
 //   mutation createSpending($input: ExpenseInput!) {
 //     createSpending(input: $input) {

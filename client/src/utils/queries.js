@@ -6,13 +6,20 @@ export const QUERY_ME = gql`
       _id
       username
       email
-      expenses{
+      
+      budgets {
+        _id
+        amount
+        category
+        description
+      }
+      expenses {
         _id
         description
+        amount
+        date
         company
         category
-        date
-        amount
       }
     }
   }
