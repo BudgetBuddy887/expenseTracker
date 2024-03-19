@@ -146,15 +146,24 @@ const Expense = () => {
         <Container>
           <Row>
             <Col>My Expenses</Col>
-            {loading ? <><Col>Calculating Total...</Col></> : <Col>Total: {data?  data.me.dashboard.sumExpense : 0}</Col>}
-            {loading ? <><Col>Calculating Top Spending...</Col></> : <Col>Top Spending: {data?  data.me.dashboard.maxExpense : 0}</Col>}
+            {loading ? 
+              <>
+                <Col>Calculating Total...</Col>
+                <Col>Calculating Top Spending...</Col>
+              </> 
+              : 
+              <>
+                <Col>Total: {data && data.me && data.me.dashboard ? data.me.dashboard.sumExpense : 0}</Col>
+                <Col>Top Spending: {data && data.me && data.me.dashboard ? data.me.dashboard.maxExpense : 0}</Col>
+              </>
+            }
             <Col>
-            <DropdownButton id="dropdown-item-button" title="-- Sort By --">
-              <Dropdown.Item as="button" id="latest" onClick={handleSorting}>Latest</Dropdown.Item>
-              <Dropdown.Item as="button" id="oldest" onClick={handleSorting}>Oldest</Dropdown.Item>
-              <Dropdown.Item as="button" id="highest" onClick={handleSorting}>Highest</Dropdown.Item>
-              <Dropdown.Item as="button" id="lowest" onClick={handleSorting}>Lowest</Dropdown.Item>
-            </DropdownButton>
+              <DropdownButton id="dropdown-item-button" title="-- Sort By --">
+                <Dropdown.Item as="button" id="latest" onClick={handleSorting}>Latest</Dropdown.Item>
+                <Dropdown.Item as="button" id="oldest" onClick={handleSorting}>Oldest</Dropdown.Item>
+                <Dropdown.Item as="button" id="highest" onClick={handleSorting}>Highest</Dropdown.Item>
+                <Dropdown.Item as="button" id="lowest" onClick={handleSorting}>Lowest</Dropdown.Item>
+              </DropdownButton>
             </Col>
             <Col>
               <Button variant="primary" onClick={() => {

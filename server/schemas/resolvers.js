@@ -12,8 +12,8 @@ const resolvers = {
           let max = 0;
           const user = await User.findOne({ _id: context.user._id }).select('-__v -password').populate('expenses');
           if(user.expenses.length > 0){
-            user.expenses.map((expense) => { sum = sum + expense.amount })
-            user.expenses.map((expense) => { if(expense.amount > max) {max = expense.amount} })
+            user.expenses.map((expense) => { sum = sum + expense.amount });
+            user.expenses.map((expense) => { if(expense.amount > max) {max = expense.amount} });
           }
           user.dashboard.sumExpense = sum;
           user.dashboard.maxExpense = max;
