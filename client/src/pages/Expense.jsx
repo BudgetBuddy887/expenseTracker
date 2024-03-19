@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { CREATE_EXPENSE, DELETE_EXPENSE, UPDATE_EXPENSE} from '../utils/mutations';
 import {QUERY_ME} from '../utils/queries';
+import Chart from 'chart.js/auto'
 
 import {Table, Button, Modal, Container, Row, Col, Form, Tab, Nav, Dropdown, DropdownButton} from 'react-bootstrap';
 
@@ -140,6 +141,34 @@ const Expense = () => {
   const handleSorting = async (e) => {
     alert(e.target.getAttribute("id"));
   }
+
+  const createChart = (async function() {
+    const userData = useQuery(QUERY_ME);
+    console.log(userData);
+    const chartData = [
+      { category: "Food", count: 120 },
+      { category: "Bills", count: 155 },
+      { category: "Rent", count: 370 },
+      { category: "Travel", count: 58 },
+      { category: "Entertainment", count: 115 },
+    ];
+  
+    new Chart(
+      document.getElementById('acquisitions'),
+      {
+        type: 'doughnut',
+        data: {
+          labels: chartData.map(row => row.category),
+          datasets: [
+            {
+              label: 'Spending this month',
+              data: chartData.map(row => row.count)
+            }
+          ]
+        }
+      }
+    );
+  })();
   
     return (
         <>
@@ -281,7 +310,7 @@ const Expense = () => {
             </Modal.Footer>
           </Modal>
         </Container>
-        </>
+        <div><canvas id="acquisitions"></canvas></div>        </>
     )
 };
 export default Expense;

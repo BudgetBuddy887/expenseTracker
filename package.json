@@ -20,6 +20,7 @@
         "@emotion/react": "^11.11.4",
         "@emotion/styled": "^11.11.0",
         "apollo-server-express": "^3.13.0",
+        "chart.js": "^4.4.2",
         "framer-motion": "^11.0.14"
     }
 }
