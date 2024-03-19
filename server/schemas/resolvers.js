@@ -4,13 +4,38 @@ const { signToken } = require('../utils/auth');
 
 const resolvers = {
   Query: {
-    me: async (parent, args, context) => {
+    me: async (parent, {orderBy}, context) => {
       try{
         if (context.user.username) {
           console.log(context.user.username);
+          console.log("order by" + orderBy);
           let sum = 0;
           let max = 0;
-          const user = await User.findOne({ _id: context.user._id }).select('-__v -password').populate('expenses');
+
+          let sortingOrder = {};
+
+          switch (orderBy) {
+            case 'highest': 
+              sortingOrder = { amount:  -1 }
+              break;
+            case 'lowest': 
+              sortingOrder = { amount : 1 }
+              break;
+            case 'oldest': 
+              sortingOrder = { date : 1 }
+              break;
+            case 'latest': 
+              sortingOrder =  { date:  -1 }
+              break;
+          }
+
+
+          const user = await User.findOne({ _id: context.user._id }).select('-__v -password')
+          .populate({
+            path: 'expenses',
+            options: { sort: sortingOrder}
+          });
+
           if(user.expenses.length > 0){
             user.expenses.map((expense) => { sum = sum + expense.amount });
             user.expenses.map((expense) => { if(expense.amount > max) {max = expense.amount} });
