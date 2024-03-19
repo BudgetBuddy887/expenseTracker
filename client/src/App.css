@@ -2,6 +2,14 @@ body {
   font-family: 'Rubik', sans-serif;
 }
 
+.navbar {
+  padding: 30px;
+  margin-bottom: 20px;
+}
+
+.expense-table {
+  margin-top: 20px;
+}
 /* h1,
 h2,
 h3,
