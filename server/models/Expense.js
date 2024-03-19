@@ -8,11 +8,11 @@ const expenseSchema = new Schema({
         trim: true,
     },
     amount: {
-        type: Number,
+        type: Schema.Types.Decimal128,
         required: true,
         min: 0,
-        get: v => parseFloat(v.toFixed(2)),
-        set: v => parseFloat(v.toFixed(2)),
+        // get: v => parseFloat(v.toFixed(2)),
+        // set: v => parseFloat(v.toFixed(2)),
     },
     date: {
     // When purchase made
@@ -36,7 +36,12 @@ const expenseSchema = new Schema({
         type: Date,
         default: Date.now,
         get: (timestamp) => dateFormat(timestamp),
-    }
+    },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
 });
 
 const Expense = model('Expense', expenseSchema);

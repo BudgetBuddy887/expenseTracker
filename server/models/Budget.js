@@ -4,7 +4,7 @@ const dateFormat = require('../utils/dateFormat');
 
 const budgetSchema = new Schema({
     amount: {
-        type: String,
+        type: Schema.Types.Decimal128,
         required: true,
         min: 0,
         get: v => parseFloat(v.toFixed(2)),

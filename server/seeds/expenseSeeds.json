@@ -1,0 +1,11 @@
+[
+    {
+        "description": "Rent",
+        "amount": "1000",
+        "date": "2024-03-18T00:00:00.000Z",
+        "category": "Bills",
+        "company": "Landlord",
+        "createdAt": "2024-03-18T00:00:00.000Z",
+        "user": "65f8b125fb3552a90be69092"
+    }
+]
