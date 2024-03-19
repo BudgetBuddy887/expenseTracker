@@ -9,6 +9,7 @@ const typeDefs = gql`
         password: String!
         budgets: [Budget]
         expenses: [Expense]
+        dashboard: Dashboard
     }
 
     type Budget {
@@ -41,6 +42,11 @@ const typeDefs = gql`
     type Auth {
         token: ID!
         user: User
+    }
+
+    type Dashboard {
+        sumExpense: Float
+        maxExpense: Float
     }
 
     type Query {

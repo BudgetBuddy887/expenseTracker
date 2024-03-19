@@ -1,31 +1,28 @@
 const { AuthenticationError } = require('apollo-server-express');
-const { User, Expense } = require('../models');
+const { User, Expense, UserData } = require('../models');
 const { signToken } = require('../utils/auth');
 
 const resolvers = {
   Query: {
     me: async (parent, args, context) => {
-      if (context.user.username) {
-        console.log(context.user.username);
-        const userData = await User.findOne({ _id: context.user._id }).select('-__v -password').populate('expenses');
-        console.log(userData);
-        return userData;
-      }
-      console.log('Use is logged out or has not logged in');
-      throw new AuthenticationError('Not logged in');
-    },
-
-    userData: async (parent, args, context) => {
-      try {
+      try{
         if (context.user.username) {
-          console.log('Get user data : ' + context.user._id);
-          const userData = await User.findById(context.user._id).populate('expenses').populate('budgets')
-          console.log('Get user data : ' + JSON.stringify(user));
-          return userData;
+          console.log(context.user.username);
+          let sum = 0;
+          let max = 0;
+          const user = await User.findOne({ _id: context.user._id }).select('-__v -password').populate('expenses');
+          if(user.expenses.length > 0){
+            user.expenses.map((expense) => { sum = sum + expense.amount })
+            user.expenses.map((expense) => { if(expense.amount > max) {max = expense.amount} })
+          }
+          user.dashboard.sumExpense = sum;
+          user.dashboard.maxExpense = max;
+          console.log(user);
+          return user;
         }
-      } catch (error) {
-        throw new Error('no user');
-      }
+        console.log('Use is logged out or has not logged in');
+        throw new AuthenticationError('Not logged in');
+      }catch(err){console.log(err)}
     },
 
     getAllBudgetData: async (parent, args, context) => {
