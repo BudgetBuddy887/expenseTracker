@@ -4,6 +4,7 @@ import githubLogo from '../assets/github-mark-white.png';
 
 export default function Footer() {
     return (
+
         <footer style={{ color: 'white', backgroundColor: 'grey', textAlign: 'center', padding: '10px'}} class="fixed-bottom">
             <Col>
             <div>

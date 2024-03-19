@@ -50,7 +50,7 @@ const typeDefs = gql`
     }
 
     type Query {
-        me:User
+        me(orderBy:String):User
         userData : User
         getAllBudgetData(_id: ID!): [Budget]
         getAllExpenseData(_id: ID!): [Expense] 
