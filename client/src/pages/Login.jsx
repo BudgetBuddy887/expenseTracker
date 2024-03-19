@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import AuthService from "../utils/auth";
 import { useMutation } from "@apollo/client";
 import { LOGIN_USER } from "../utils/mutations";
+import { ChakraProvider, Box, Flex, FormControl, FormLabel, Input, Button } from '@chakra-ui/react';
 
 const Login = () => {
   const [login] = useMutation(LOGIN_USER);
