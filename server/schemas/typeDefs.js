@@ -14,7 +14,7 @@ const typeDefs = gql`
     type Budget {
         _id: ID!
         amount: Float!
-        category: String!
+        category:String
         description: String
         user: User!
     }
@@ -37,7 +37,15 @@ const typeDefs = gql`
         category: String!
         company: String!
     }
-    
+   
+    input BudgetInput {
+        id: ID
+        description: String
+        amount: Float!
+        category:String
+        
+    }
+
     type Auth {
         token: ID!
         user: User
@@ -53,9 +61,20 @@ const typeDefs = gql`
     type Mutation {
         login(email:String!, password:String!): Auth
         addUser(username:String!, email:String!, password:String!): Auth
+        
         createExpense(expenseData: ExpenseInput!): User
         updateExpense(expenseData: ExpenseInput!): User
         deleteExpense(expenseId: String!): Expense
+
+
+        createBudget(budgetData: BudgetInput!): User
+        updateBudget(budgetData: BudgetInput!): User
+        deleteBudget(budgetId: String!): Budget
+
+
     }`;
 
-    module.exports = typeDefs;
+    module.exports = typeDefs; 
+    
+    
+  
