@@ -153,8 +153,8 @@ const Expense = () => {
               </> 
               : 
               <>
-                <Col>Total: {data && data.me && data.me.dashboard ? data.me.dashboard.sumExpense : 0}</Col>
-                <Col>Top Spending: {data && data.me && data.me.dashboard ? data.me.dashboard.maxExpense : 0}</Col>
+                <Col>Total: £{data && data.me && data.me.dashboard ? data.me.dashboard.sumExpense : 0}</Col>
+                <Col>Top Spending: £{data && data.me && data.me.dashboard ? data.me.dashboard.maxExpense : 0}</Col>
               </>
             }
             <Col>
@@ -180,7 +180,7 @@ const Expense = () => {
               </Button>
             </Col>
           </Row>
-          <Table striped bordered hover>
+          <Table striped bordered hover className="expense-table">
             <thead>
               <tr>
                 <th>Description</th>
@@ -208,7 +208,7 @@ const Expense = () => {
                        <td id={"category" + e._id}>{e.category}</td>
                        <td id={"company" + e._id}>{e.company}</td>
                        <td id={"date" + e._id}>{e.date}</td>
-                       <td id={"amount" + e._id}>{e.amount}</td>
+                       <td id={"amount" + e._id}>£{e.amount}</td>
                        <td><Button controlId={e._id} onClick={editExpense} variant='outline-info'>Edit</Button></td>
                        <td><Button controlId={e._id} onClick={handleDeleteExpense} variant='outline-danger'>Delete</Button></td>
                      </tr>
