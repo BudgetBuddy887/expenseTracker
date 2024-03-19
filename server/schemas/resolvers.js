@@ -4,28 +4,50 @@ const { signToken } = require('../utils/auth');
 
 const resolvers = {
   Query: {
-    me: async (parent, args, context) => {
-      if (context.user.username) {
-        console.log(context.user.username);
-        const userData = await User.findOne({ _id: context.user._id }).select('-__v -password').populate('expenses').populate('budgets');
-        console.log(userData);
-        return userData;
-      }
-      console.log('Use is logged out or has not logged in');
-      throw new AuthenticationError('Not logged in');
-    },
-
-    userData: async (parent, args, context) => {
-      try {
+    me: async (parent, {orderBy}, context) => {
+      try{
         if (context.user.username) {
-          console.log('Get user data : ' + context.user._id);
-          const userData = await User.findById(context.user._id).populate('expenses').populate('budgets')
-          console.log('Get user data : ' + JSON.stringify(user));
-          return userData;
+          console.log(context.user.username);
+          console.log("order by" + orderBy);
+          let sum = 0;
+          let max = 0;
+
+          let sortingOrder = {};
+
+          switch (orderBy) {
+            case 'highest': 
+              sortingOrder = { amount:  -1 }
+              break;
+            case 'lowest': 
+              sortingOrder = { amount : 1 }
+              break;
+            case 'oldest': 
+              sortingOrder = { date : 1 }
+              break;
+            case 'latest': 
+              sortingOrder =  { date:  -1 }
+              break;
+          }
+
+
+          const user = await User.findOne({ _id: context.user._id }).select('-__v -password')
+          .populate({
+            path: 'expenses',
+            options: { sort: sortingOrder}
+          });
+
+          if(user.expenses.length > 0){
+            user.expenses.map((expense) => { sum = sum + expense.amount });
+            user.expenses.map((expense) => { if(expense.amount > max) {max = expense.amount} });
+          }
+          user.dashboard.sumExpense = sum;
+          user.dashboard.maxExpense = max;
+          console.log(user);
+          return user;
         }
-      } catch (error) {
-        throw new Error('no user');
-      }
+        console.log('Use is logged out or has not logged in');
+        throw new AuthenticationError('Not logged in');
+      }catch(err){console.log(err)}
     },
 
     getAllBudgetData: async (parent, args, context) => {

@@ -32,6 +32,15 @@ const userSchema = new Schema(
         type: Schema.Types.ObjectId,
         ref: 'Budget'
      }],
+
+    dashboard : {
+      sumExpense: {
+        type: Number
+      },
+      maxExpense: {
+        type: Number
+      }
+    },
     
   },
   // set this to use virtual below

@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export const QUERY_ME = gql`
-  query me {
-    me {
+  query me ($orderBy: String) {
+    me (orderBy: $orderBy) {
       _id
       username
       email
@@ -20,6 +20,10 @@ export const QUERY_ME = gql`
         date
         company
         category
+      }
+      dashboard{
+        sumExpense
+        maxExpense
       }
     }
   }

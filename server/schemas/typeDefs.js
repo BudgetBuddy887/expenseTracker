@@ -9,6 +9,7 @@ const typeDefs = gql`
         password: String!
         budgets: [Budget]
         expenses: [Expense]
+        dashboard: Dashboard
     }
 
     type Budget {
@@ -51,8 +52,13 @@ const typeDefs = gql`
         user: User
     }
 
+    type Dashboard {
+        sumExpense: Float
+        maxExpense: Float
+    }
+
     type Query {
-        me:User
+        me(orderBy:String):User
         userData : User
         getAllBudgetData(_id: ID!): [Budget]
         getAllExpenseData(_id: ID!): [Expense] 
