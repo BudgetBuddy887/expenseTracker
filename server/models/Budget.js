@@ -3,8 +3,8 @@ const { Schema, model } = require('mongoose');
 const dateFormat = require('../utils/dateFormat');
 
 const budgetSchema = new Schema({
-    amount: {
-        type: String,
+     amount: {
+        type: Number,
         required: true,
         min: 0,
         get: v => parseFloat(v.toFixed(2)),
@@ -12,7 +12,7 @@ const budgetSchema = new Schema({
     },
     category: {
         type: String,
-        required: true,
+        
         trim: true,
     },
     description: {
@@ -22,7 +22,7 @@ const budgetSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User',
-        required: true,
+       
     },
 });
 const Budget = model('Budget', budgetSchema);

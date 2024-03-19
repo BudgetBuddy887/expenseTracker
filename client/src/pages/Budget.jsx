@@ -1,58 +1,52 @@
-// import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import { useState } from 'react';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { CREATE_BUDGET, UPDATE_BUDGET,DELETE_BUDGET} from '../utils/mutations';
+import { QUERY_ME } from '../utils/queries';
+import { Container, Row, Col, Table, Button, Modal, Form, Card } from 'react-bootstrap';
 
 const Budget = () => {
-    const { isOpen, onOpen, onClose } = useDisclosure()
-  const [formState, setFormState] = useState({ amount:0, description:'', category: ''});
+  const [createBudget] = useMutation(CREATE_BUDGET, {
+    refetchQueries: [QUERY_ME, 'me'],
+  });
 
-  // update state based on form input changes
-  const handleFormChange = (event) => {
-    const { name, value } = event.target;
+  const [updateBudget] = useMutation(UPDATE_BUDGET, {
+    refetchQueries: [QUERY_ME, 'me'],
+  });
 
-    setFormState({
-      ...formState,
-      [name]: value,
-    });
-  };
+  const [deleteBudget] = useMutation(DELETE_BUDGET, {
+    refetchQueries: [QUERY_ME, 'me'],
+  });
 
-  // function handleSubmit(e){
-  //   e.preventDefault();
-  //   handleFormSubmit(formData);
-  // }
-  
-  function handleFormSubmit(e){
+  const { loading, error, data } = useQuery(QUERY_ME);
+
+  const [showModal, setShowModal] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [selectedBudget, setSelectedBudget] = useState(null);
+  const [description, setDescription] = useState('');
+  const [category, setCategory] = useState('');
+  const [amount, setAmount] = useState('');
+
+  const handleBudgetSubmit = async (e) => {
     e.preventDefault();
-    alert(formState.amount);
-  }
-
-  function editExpense(e){
-    alert(e.target.key);
-  }
-
-  const data = 
-  {
-    total: 400,
-    budget: [
-      {
-      description: 'Mobile, TV, Music',
-      amount: '100',
-      category: 'Entertainment',
-      },
-      {
-      description: 'Train, Bus, Fuel',
-      amount: '100',
-      category: 'Tavel',
-      },
-      {
-      description: 'Electricity, Water, Council Tax',
-      amount: '200',
-      category: 'Household',
+    try {
+      const budgetInput = {
+        description,
+        amount: Number.parseFloat(amount),
+        category,
+      };
+      if (isEdit) {
+        await updateBudget({
+          variables: {
+            budgetData: { ...budgetInput, id: selectedBudget._id },
+          },
+        });
+      } else {
+        await createBudget({
+          variables: {
+            budgetData: budgetInput,
+          },
+        });
       }
-  
-    ]
-  }
-}
 
 export default Budget;
