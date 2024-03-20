@@ -34,7 +34,7 @@ const resolvers = {
           .populate({
             path: 'expenses',
             options: { sort: sortingOrder}
-          });
+          }).populate('budgets');
 
           if(user.expenses.length > 0){
             user.expenses.map((expense) => { sum = sum + expense.amount });
