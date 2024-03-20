@@ -39,6 +39,9 @@ const userSchema = new Schema(
       },
       maxExpense: {
         type: Number
+      },
+      sumBudget: {
+        type: Number
       }
     },
     

@@ -9,8 +9,9 @@ const resolvers = {
         if (context.user.username) {
           console.log(context.user.username);
           console.log("order by" + orderBy);
-          let sum = 0;
-          let max = 0;
+          let sumExpense = 0;
+          let maxExpense = 0;
+          let sumBudget = 0;
 
           let sortingOrder = {};
 
@@ -37,15 +38,17 @@ const resolvers = {
           }).populate('budgets');
 
           if(user.expenses.length > 0){
-            user.expenses.map((expense) => { sum = sum + expense.amount });
-            user.expenses.map((expense) => { if(expense.amount > max) {max = expense.amount} });
+            user.expenses.map((expense) => { sumExpense = sumExpense + expense.amount });
+            user.expenses.map((expense) => { if(expense.amount > maxExpense) {maxExpense = expense.amount} });
+            user.budgets.map((budget) => { sumBudget = sumBudget + budget.amount });
           }
-          user.dashboard.sumExpense = sum;
-          user.dashboard.maxExpense = max;
+          user.dashboard.sumExpense = sumExpense;
+          user.dashboard.maxExpense = maxExpense;
+          user.dashboard.sumBudget = sumBudget;
           console.log(user);
           return user;
         }
-        console.log('Use is logged out or has not logged in');
+        console.log('User is logged out or has not logged in');
         throw new AuthenticationError('Not logged in');
       }catch(err){console.log(err)}
     },

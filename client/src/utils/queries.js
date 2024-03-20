@@ -24,6 +24,7 @@ export const QUERY_ME = gql`
       dashboard{
         sumExpense
         maxExpense
+        sumBudget
       }
     }
   }
