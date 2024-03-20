@@ -6,7 +6,7 @@ import { useMutation } from '@apollo/client';
 import { CREATE_EXPENSE, DELETE_EXPENSE, UPDATE_EXPENSE} from '../utils/mutations';
 import {QUERY_ME} from '../utils/queries';
 import { Bar,Pie } from 'react-chartjs-2';
-import {Table, Button, Modal, Container, Row, Col, Form, Badge, Dropdown, DropdownButton} from 'react-bootstrap';
+import {Table, Button, Modal, Container, Card, Row, Col, Form, Badge, Offcanvas, Dropdown, DropdownButton} from 'react-bootstrap';
 import {Chart as chartJS,defaults} from "chart.js/auto";
 
 
@@ -51,6 +51,28 @@ const budgets = data?.me?.budgets || [];
 const totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0);
 const totalBudgets = budgets.reduce((sum, budget) => sum + budget.amount, 0);
 
+const categories =  data?.me?.expenses.map(expense => expense.category) || [];
+const amounts =  data?.me?.expenses.map(expense => expense.amount) || [];
+
+const mood = (totalExpenses > totalBudgets) ? "danger" : "success";
+
+console.log(categories);
+console.log(amounts);
+
+const chartData = {
+  labels: categories,
+  datasets: [
+    {
+      label: 'Amount',
+      backgroundColor: 'rgba(75,192,192,0.2)',
+      borderColor: 'rgba(75,192,192,1)',
+      borderWidth: 1,
+      hoverBackgroundColor: 'rgba(75,192,192,0.4)',
+      hoverBorderColor: 'rgba(75,192,192,1)',
+      data: amounts, // Update with the total amounts for each category
+    },
+  ],
+};
 
 const [showModal, setShowModal] = React.useState(false);
 
@@ -159,195 +181,227 @@ const handleSelect = (item) => {
   refetch({ orderBy: item.toLowerCase() });
 };
 
+const [show, setShow] = useState(false);
+
+const handleClose = () => setShow(false);
+const handleShow = () => setShow(true);
+
 return (
     <>
-    <Container>
-      <Row>
-        <Col>My Expenses</Col>
-        {loading ? 
-          <>
-            <Col>Calculating Total...</Col>
-            <Col>Calculating Top Spending...</Col>
-          </> 
-          : 
-          <>
-            <Col>
-            <Button variant="dark">
-              Total <Badge bg="secondary">{data && data.me && data.me.dashboard ? data.me.dashboard.sumExpense : 0}</Badge>
-              
-            </Button>
+      <Card className="p-2">
+        <Card.Header className="bg-secondary text-white">
+          <Row>
+            <Col md={2}>
+              <h4 className="mb-0">My Expenses</h4> 
             </Col>
-
-            <Col>Top Spending: {data && data.me && data.me.dashboard ? data.me.dashboard.maxExpense : 0}</Col>
-            
-          </>
-        }
-        <Col>
-        <DropdownButton
-          title={selectedItem || 'Order By'}
-          variant="info"
-          onSelect={handleSelect}
-        >
-          <Dropdown.Item eventKey="Latest">Latest</Dropdown.Item>
-          <Dropdown.Item eventKey="Oldest">Oldest</Dropdown.Item>
-          <Dropdown.Item eventKey="Highest">Highest</Dropdown.Item>
-          <Dropdown.Item eventKey="Lowest">Lowest</Dropdown.Item>
-        </DropdownButton>
-        </Col>
-        <Col>
-          <Button variant="primary" onClick={() => {
-            setIsEdit(false); 
-            setId("")
-            setDescription("");
-            setCategory("");
-            setCompany("");
-            setDate("");
-            setAmount("");
-            setShowModal(true)}
-            }>
-            Add Expense
-          </Button>
-        </Col>
-      </Row>
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>Description</th>
-            <th>Category</th>
-            <th>Company</th>
-            <th>Date</th>
-            <th>Amount</th>
-            <th></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          
-          {loading ? 
-          <tr>
-            <td> "Loading..."</td>
-            <td>{error? error.message : "No Error"}</td>
-          </tr>
-          : 
-          <>
-          {data && data.me && data.me.expenses && data.me.expenses.map((e, index) => {
-                return (
-                  <tr key={e.id}>
-                    <td id={"description" + e._id}>{e.description}</td>                
-                    <td id={"category" + e._id}>{e.category}</td>
-                    <td id={"company" + e._id}>{e.company}</td>
-                    <td id={"date" + e._id}>{e.date}</td>
-                    <td id={"amount" + e._id}>£{e.amount}</td>
-                   
-                    <td><Button controlId={e._id} onClick={editExpense} variant='outline-info'>Edit</Button></td>
-                    <td><Button controlId={e._id} onClick={handleDeleteExpense} variant='outline-danger'>Delete</Button></td>
+            <Col>
+              <Badge bg={mood}>
+                Expeneses <Badge> £ {data && data.me && data.me.dashboard ? data.me.dashboard.sumExpense : 0}</Badge>
+              </Badge>
+            </Col>
+            <Col>
+              <Badge bg="dark">
+                Budget <Badge> £ {data && data.me && data.me.dashboard ? data.me.dashboard.sumBudget : 0}</Badge>
+              </Badge>
+            </Col>
+            <Col>
+              <Badge bg="dark">
+              Top Spending <Badge> £ {data && data.me && data.me.dashboard ? data.me.dashboard.maxExpense : 0}</Badge> 
+              </Badge>
+            </Col>  
+            <Col>
+                <Button variant="light" size="sm" onClick={handleShow}>
+                  Chart
+                </Button>
+              </Col>
+              <Col className='' >
+                <DropdownButton size="sm"
+                  title={selectedItem || 'Order By'}
+                  variant="light"
+                  onSelect={handleSelect}
+                >
+                  <Dropdown.Item eventKey="Latest">Latest</Dropdown.Item>
+                  <Dropdown.Item eventKey="Oldest">Oldest</Dropdown.Item>
+                  <Dropdown.Item eventKey="Highest">Highest</Dropdown.Item>
+                  <Dropdown.Item eventKey="Lowest">Lowest</Dropdown.Item>
+                </DropdownButton>
+              </Col>
+              <Col>
+              <Button size="sm" variant="light" onClick={() => {
+                  setIsEdit(false); 
+                  setId("")
+                  setDescription("");
+                  setCategory("");
+                  setCompany("");
+                  setDate("");
+                  setAmount("");
+                  setShowModal(true)}
+                  }>
+                  Add Expense
+                </Button>
+              </Col>
+          </Row>
+        </Card.Header>
+        <Card.Body>
+          <Container fuild="md">
+            <Row className='p-2'>
+              
+            </Row>
+            <Row>
+              <Table striped bordered hover size="sm">
+                <thead>
+                  <tr>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Company</th>
+                    <th>Date</th>
+                    <th>Amount</th>
                   </tr>
-                );
-              })}
-          </>}
-        </tbody>
-      </Table>
-      <Modal
-      size='lg'
-      show={showModal}
-      onHide={() => setShowModal(false)}
-      aria-labelledby='signup-modal'>
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">
-            {isEdit ? 'Edit Expense' : 'Add New Expense'}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Row className="mb-3">
-            <Form.Group as={Col} >
-              <Form.Label>Description</Form.Label>
-              <Form.Control 
-              type='text'
-              name='description'
-              placeholder='Description'
-              onChange={(e) => setDescription(e.target.value)}
-              value={description} />
-            </Form.Group>
+                </thead>
+                <tbody>
+                  
+                  {loading ? 
+                  <tr>
+                    <td> "Loading..."</td>
+                    <td>{error? error.message : "No Error"}</td>
+                  </tr>
+                  : 
+                  <>
+                  {data && data.me && data.me.expenses && data.me.expenses.map((e, index) => {
+                        return (
+                          <tr key={e.id}>
+                            <td id={"description" + e._id}>{e.description}</td>                
+                            <td id={"category" + e._id}>{e.category}</td>
+                            <td id={"company" + e._id}>{e.company}</td>
+                            <td id={"date" + e._id}>{e.date}</td>
+                            <td id={"amount" + e._id}>£{e.amount}</td>
+                          
+                            <td className="p-2">
+                              <Button size="sm" controlId={e._id} onClick={editExpense} variant='outline-info'>Edit</Button>
+                              <span>  </span>
+                              <Button size="sm" controlId={e._id} onClick={handleDeleteExpense} variant='outline-danger'>Delete</Button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                  </>}
+                </tbody>
+              </Table>
+            </Row>
+            <Modal
+            size='lg'
+            show={showModal}
+            onHide={() => setShowModal(false)}
+            aria-labelledby='signup-modal'>
+              <Modal.Header closeButton>
+                <Modal.Title id="contained-modal-title-vcenter">
+                  {isEdit ? 'Edit Expense' : 'Add New Expense'}
+                </Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <Row className="mb-3">
+                  <Form.Group as={Col} >
+                    <Form.Label>Description</Form.Label>
+                    <Form.Control 
+                    type='text'
+                    name='description'
+                    placeholder='Description'
+                    onChange={(e) => setDescription(e.target.value)}
+                    value={description} />
+                  </Form.Group>
 
-            <Form.Group as={Col} controlId="formGridCategory">
-              <Form.Label>Category</Form.Label>
-              <Form.Control type="text" 
-              placeholder="i.e. Household, Electricity, Water"
-              onChange={(e) => setCategory(e.target.value)}
-              value={category} />
-            </Form.Group>
-          </Row>
-          <Row className="mb-3">
-            <Form.Group as={Col} controlId="formGridCompany">
-              <Form.Label>Company</Form.Label>
-              <Form.Control type="text" 
-              placeholder="i.e. Tesco, Sainsbury, Amazon" 
-              onChange={(e) => setCompany(e.target.value)}
-              value={company}/>
-            </Form.Group>
+                  <Form.Group as={Col} controlId="formGridCategory">
+                    <Form.Label>Category</Form.Label>
+                    <Form.Control type="text" 
+                    placeholder="i.e. Household, Electricity, Water"
+                    onChange={(e) => setCategory(e.target.value)}
+                    value={category} />
+                  </Form.Group>
+                </Row>
+                <Row className="mb-3">
+                  <Form.Group as={Col} controlId="formGridCompany">
+                    <Form.Label>Company</Form.Label>
+                    <Form.Control type="text" 
+                    placeholder="i.e. Tesco, Sainsbury, Amazon" 
+                    onChange={(e) => setCompany(e.target.value)}
+                    value={company}/>
+                  </Form.Group>
 
-            <Form.Group as={Col} controlId="formGridAmount">
-              <Form.Label>Amount</Form.Label>
-              <Form.Control type="number" 
-              placeholder="Amount" 
-              onChange={(e) => setAmount(e.target.value)}
-              value={amount}/>
-            </Form.Group>
-          </Row>
-          <Row className="mb-3">
-            <Form.Group as={Col} controlId="formGridDate">
-              <Form.Label>Date</Form.Label>
-              <Form.Control type="date" 
-              placeholder="Enter date" 
-              onChange={(e) => setDate(e.target.value)}
-              value={date}/>
-            </Form.Group>
-          </Row>
+                  <Form.Group as={Col} controlId="formGridAmount">
+                    <Form.Label>Amount</Form.Label>
+                    <Form.Control type="number" 
+                    placeholder="Amount" 
+                    onChange={(e) => setAmount(e.target.value)}
+                    value={amount}/>
+                  </Form.Group>
+                </Row>
+                <Row className="mb-3">
+                  <Form.Group as={Col} controlId="formGridDate">
+                    <Form.Label>Date</Form.Label>
+                    <Form.Control type="date" 
+                    placeholder="Enter date" 
+                    onChange={(e) => setDate(e.target.value)}
+                    value={date}/>
+                  </Form.Group>
+                </Row>
 
-        </Modal.Body>
-        <Modal.Footer>
-          <Button  onClick={handleExpense} variant='success'>Save</Button>
-        </Modal.Footer>
-      </Modal>
-    </Container> 
-   
-    <Container>
-      
-  
-        <Bar
-          data={{
-            labels: ['March'],
-            datasets: [
-              {
-                label: 'Expenses',
-                data: [totalExpenses],
-                backgroundColor: 'red',
-              
-              
-              },
-              {
-                label: 'Budget',
-                data: [totalBudgets],
-                backgroundColor: 'blue)',
-              
-              
-              },
-            ],
-          }}
-          options={{
-            plugins: {
-              title: {
-                display: true,
-                text: 'Budget vs Expenses',
-              },
-            },
-    
-          }}
-        />
-      
+              </Modal.Body>
+              <Modal.Footer>
+                <Button  onClick={handleExpense} variant='success'>Save</Button>
+              </Modal.Footer>
+            </Modal>
+          </Container> 
 
-    </Container> 
+          <Offcanvas placement={'end'} show={show} onHide={handleClose}>
+              <Offcanvas.Header closeButton>
+                <Offcanvas.Title>Financial Health Chart</Offcanvas.Title>
+              </Offcanvas.Header>
+              <Offcanvas.Body>
+                <Bar
+                  data={chartData}
+                  options={{
+                    plugins: {
+                      title: {
+                        display: true,
+                        text: 'Category vs Amount',
+                      },
+                    },
+                  }}
+                />
+
+              <Bar
+                data={{
+                  labels: ['March'],
+                  datasets: [
+                    {
+                      label: 'Expenses',
+                      data: [totalExpenses],
+                      backgroundColor: 'red',
+                    },
+                    {
+                      label: 'Budget',
+                      data: [totalBudgets],
+                      backgroundColor: 'blue)',
+                    },
+                  ],
+                }}
+                options={{
+                  plugins: {
+                    title: {
+                      display: true,
+                      text: 'Budget vs Expenses',
+                    },
+                  },
+          
+                }}
+              />
+              </Offcanvas.Body>
+          </Offcanvas>
+        </Card.Body>  
+      </Card>
     </>
   )
 };
+
+
 export default Expense;

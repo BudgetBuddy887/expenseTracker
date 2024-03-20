@@ -55,6 +55,7 @@ const typeDefs = gql`
     type Dashboard {
         sumExpense: Float
         maxExpense: Float
+        sumBudget: Float
     }
 
     type Query {
