@@ -173,12 +173,12 @@ return (
           <>
             <Col>
             <Button variant="dark">
-              Total <Badge bg="secondary">{data && data.me && data.me.dashboard ? data.me.dashboard.sumExpense : 0}</Badge>
+              Total <Badge bg="secondary">£{data && data.me && data.me.dashboard ? data.me.dashboard.sumExpense : 0}</Badge>
               
             </Button>
             </Col>
 
-            <Col>Top Spending: {data && data.me && data.me.dashboard ? data.me.dashboard.maxExpense : 0}</Col>
+            <Col>Top Spending: £{data && data.me && data.me.dashboard ? data.me.dashboard.maxExpense : 0}</Col>
             
           </>
         }
