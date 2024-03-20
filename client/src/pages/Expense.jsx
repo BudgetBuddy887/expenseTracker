@@ -5,8 +5,11 @@ import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { CREATE_EXPENSE, DELETE_EXPENSE, UPDATE_EXPENSE} from '../utils/mutations';
 import {QUERY_ME} from '../utils/queries';
-
+import { Bar,Pie } from 'react-chartjs-2';
 import {Table, Button, Modal, Container, Row, Col, Form, Badge, Dropdown, DropdownButton} from 'react-bootstrap';
+import {Chart as chartJS,defaults} from "chart.js/auto";
+
+
 
 const Expense = () => {
   //const { isOpen, onOpen, onClose } = useDisclosure()
@@ -36,6 +39,18 @@ const [deleteExpense] = useMutation (DELETE_EXPENSE,{
 const [orderBy, setOrderBy] = useState('latest');
 
 const { loading, error, data, refetch } = useQuery(QUERY_ME, {variables: {orderBy}});
+
+
+
+// this is just checking if we have expenses and budget in the database this is stop the runtime engine to throuw an error 
+// it is going to throw undefined instaead
+const expenses = data?.me?.expenses || [];
+const budgets = data?.me?.budgets || [];
+
+// to calculate the total expenses and bugdet with reduce method 
+const totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+const totalBudgets = budgets.reduce((sum, budget) => sum + budget.amount, 0);
+
 
 const [showModal, setShowModal] = React.useState(false);
 
@@ -159,10 +174,12 @@ return (
             <Col>
             <Button variant="dark">
               Total <Badge bg="secondary">{data && data.me && data.me.dashboard ? data.me.dashboard.sumExpense : 0}</Badge>
+              
             </Button>
             </Col>
 
             <Col>Top Spending: {data && data.me && data.me.dashboard ? data.me.dashboard.maxExpense : 0}</Col>
+            
           </>
         }
         <Col>
@@ -220,7 +237,8 @@ return (
                     <td id={"category" + e._id}>{e.category}</td>
                     <td id={"company" + e._id}>{e.company}</td>
                     <td id={"date" + e._id}>{e.date}</td>
-                    <td id={"amount" + e._id}>{e.amount}</td>
+                    <td id={"amount" + e._id}>£{e.amount}</td>
+                   
                     <td><Button controlId={e._id} onClick={editExpense} variant='outline-info'>Edit</Button></td>
                     <td><Button controlId={e._id} onClick={handleDeleteExpense} variant='outline-danger'>Delete</Button></td>
                   </tr>
@@ -291,7 +309,44 @@ return (
           <Button  onClick={handleExpense} variant='success'>Save</Button>
         </Modal.Footer>
       </Modal>
-    </Container>
+    </Container> 
+   
+    <Container>
+      
+  
+        <Bar
+          data={{
+            labels: ['March'],
+            datasets: [
+              {
+                label: 'Expenses',
+                data: [totalExpenses],
+                backgroundColor: 'red',
+              
+              
+              },
+              {
+                label: 'Budget',
+                data: [totalBudgets],
+                backgroundColor: 'blue)',
+              
+              
+              },
+            ],
+          }}
+          options={{
+            plugins: {
+              title: {
+                display: true,
+                text: 'Budget vs Expenses',
+              },
+            },
+    
+          }}
+        />
+      
+
+    </Container> 
     </>
   )
 };
