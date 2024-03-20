@@ -159,7 +159,7 @@ const resolvers = {
     deleteExpense : async(parent, {expenseId}, context) =>{
       try{
         
-        if(deletedExpense){
+        if(context.user.username){
           const updatedUser = await User.findByIdAndUpdate(
             { _id: context.user._id  },
             { $pull: { expenses: expenseId } },
@@ -167,7 +167,7 @@ const resolvers = {
           );
           console.log("Updated user after expense id " + expenseId + " is deleted: " + updatedUser);
         }
-        return deletedExpense;
+        return updatedUser;
       } catch (err) {
         console.log('Error while deleting expense: ' + expenseId + ' : ' + err);
       }
