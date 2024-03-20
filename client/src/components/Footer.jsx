@@ -5,7 +5,8 @@ import githubLogo from '../assets/github-mark-white.png';
 export default function Footer() {
     return (
 
-        <footer style={{ color: 'white', backgroundColor: 'grey', textAlign: 'center', padding: '10px', position: 'bottom'}}>
+        <footer className="footer" style={{ color: 'white', backgroundColor: 'grey', textAlign: 'center', padding: '10px'}}>
+
             <Col>
             <div>
                 <h6>BudgetBuddy ©2024</h6>
