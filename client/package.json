@@ -16,11 +16,13 @@
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
     "bootstrap": "^5.2.3",
+    "chart.js": "^4.4.2",
     "framer-motion": "^11.0.13",
     "graphql": "^16.6.0",
     "jwt-decode": "^3.1.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.4",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.11.2"
   },
