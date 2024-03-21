@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Navbar, Nav, Container, Modal, Tab } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown, Container, Modal, Tab, FormLabel } from 'react-bootstrap';
 import SignUpForm from './SignupForm';
 import LoginForm from './LoginForm';
-
+import Form from 'react-bootstrap/Form';
 import Auth from '../utils/auth';
 
 const AppNavbar = () => {
@@ -14,9 +14,9 @@ const AppNavbar = () => {
     <>
     <Navbar collapseOnSelect expand="lg" sticky="top" bg='dark' variant='dark' className='navbar' >
       <Container>
-        <Navbar.Brand href="#home">Expense Tracker 💸</Navbar.Brand>
+        <Navbar.Brand href="/">Expense Tracker 💸</Navbar.Brand>
          <Navbar.Toggle aria-controls="responsive-navbar-nav"/> 
-        <Navbar.Collapse id="responsive-navbar-nav">
+        <Navbar.Collapse id="responsive-navbar-nav" className='justify-content-end'>
             <Nav className='me-auto'>
               {Auth.loggedIn() ? (
                 <>
@@ -26,7 +26,9 @@ const AppNavbar = () => {
                   <Nav.Link href='/expenses'>
                     Expense
                   </Nav.Link>
-                  <Nav.Link onClick={Auth.logout}>Logout</Nav.Link>
+                  <NavDropdown title={localStorage.getItem('username')} id="basic-nav-dropdown">
+                      <NavDropdown.Item onClick={Auth.logout}>Logout</NavDropdown.Item>
+                    </NavDropdown>
                 </>
               ) : (
                 <Nav.Link onClick={() => setShowModal(true)}>Login/Sign Up</Nav.Link>
@@ -35,6 +37,7 @@ const AppNavbar = () => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
+                   
       
       {/* set modal data up */}
       <Modal
