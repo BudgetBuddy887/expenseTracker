@@ -73,13 +73,7 @@ export const DELETE_BUDGET = gql`
     }
   }
 `
-// export const ADD_EXPENSE = gql`
-//   mutation createSpending($input: ExpenseInput!) {
-//     createSpending(input: $input) {
-//       _id
-//     }
-//   }
-// `;
+
 
 
 

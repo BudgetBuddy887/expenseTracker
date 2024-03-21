@@ -64,9 +64,9 @@ const chartData = {
   datasets: [
     {
       label: 'Amount',
-      backgroundColor: 'rgba(75,192,192,0.2)',
+      backgroundColor: "#00ffff",
       borderColor: 'rgba(75,192,192,1)',
-      borderWidth: 1,
+      borderWidth: 2,
       hoverBackgroundColor: 'rgba(75,192,192,0.4)',
       hoverBorderColor: 'rgba(75,192,192,1)',
       data: amounts, // Update with the total amounts for each category
@@ -189,35 +189,35 @@ const handleShow = () => setShow(true);
 return (
     <>
       <Card className="p-2">
-        <Card.Header className="bg-secondary text-white">
+        <Card.Header className="bg-secondary text-black">
           <Row>
-            <Col md={2}>
-              <h4 className="mb-0">My Expenses</h4> 
+            <Col xs={12} sm={6} md={3}>
+              <h2 className="mb-0">My Expenses</h2> 
             </Col>
-            <Col>
-              <Badge bg={mood}>
+            {/* <Col xs={12} sm={6} md={3}>
+              <Badge bg={mood} text='black'>
                 Expenses <Badge> £ {data && data.me && data.me.dashboard ? data.me.dashboard.sumExpense : 0}</Badge>
               </Badge>
             </Col>
-            <Col>
-              <Badge bg="dark">
+            <Col xs={12} sm={6} md={3}>
+              <Badge bg="warning" text='black'>
                 Budget <Badge> £ {data && data.me && data.me.dashboard ? data.me.dashboard.sumBudget : 0}</Badge>
               </Badge>
             </Col>
-            <Col>
-              <Badge bg="dark">
+            <Col xs={12} sm={6} md={3}>
+              <Badge bg="warning" text='black'>
               Top Spending <Badge> £ {data && data.me && data.me.dashboard ? data.me.dashboard.maxExpense : 0}</Badge> 
               </Badge>
-            </Col>  
-            <Col>
-                <Button variant="light" size="sm" onClick={handleShow}>
-                  Chart
+            </Col>   */}
+            <Col xs={12} sm={6} md={3} className="p-1">
+                <Button variant="dark" size="sm" onClick={handleShow} >
+                  Financial Health Chart
                 </Button>
               </Col>
-              <Col className='' >
+              <Col xs={12} sm={6} md={3}className="p-1" >
                 <DropdownButton size="sm"
                   title={selectedItem || 'Order By'}
-                  variant="light"
+                  variant="dark"
                   onSelect={handleSelect}
                 >
                   <Dropdown.Item eventKey="Latest">Latest</Dropdown.Item>
@@ -226,8 +226,8 @@ return (
                   <Dropdown.Item eventKey="Lowest">Lowest</Dropdown.Item>
                 </DropdownButton>
               </Col>
-              <Col>
-              <Button size="sm" variant="light" onClick={() => {
+              <Col xs={12} sm={6} md={3} className="p-1">
+              <Button size="sm" variant="dark" onClick={() => {
                   setIsEdit(false); 
                   setId("")
                   setDescription("");
@@ -276,10 +276,10 @@ return (
                             <td id={"date" + e._id}>{e.date}</td>
                             <td id={"amount" + e._id}>£{e.amount}</td>
                           
-                            <td className="p-2">
-                              <Button size="sm" controlId={e._id} onClick={editExpense} variant='outline-info'>Edit</Button>
+                            <td className="me-2">
+                              <Button size="sm" controlId={e._id} onClick={editExpense} variant='success'>✎</Button>
                               <span>  </span>
-                              <Button size="sm" controlId={e._id} onClick={handleDeleteExpense} variant='outline-danger'>Delete</Button>
+                              <Button size="sm" controlId={e._id} onClick={handleDeleteExpense} variant='danger'> 🗑️</Button>
                             </td>
                           </tr>
                         );
@@ -357,6 +357,16 @@ return (
                 <Offcanvas.Title>Financial Health Chart</Offcanvas.Title>
               </Offcanvas.Header>
               <Offcanvas.Body>
+              <Badge className="me-2" bg="warning" text='black'>
+                Budget <Badge> £ {data && data.me && data.me.dashboard ? data.me.dashboard.sumBudget : 0}</Badge>
+              </Badge>
+              <Badge className="me-2"  bg={mood} text='black'>
+                Expenses <Badge> £ {data && data.me && data.me.dashboard ? data.me.dashboard.sumExpense : 0}</Badge>
+              </Badge>
+              
+              <Badge bg="warning" text='black'>
+              Top Spending <Badge> £ {data && data.me && data.me.dashboard ? data.me.dashboard.maxExpense : 0}</Badge> 
+              </Badge>
                 <Bar
                   data={chartData}
                   options={{

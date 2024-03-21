@@ -12,20 +12,18 @@ const AppNavbar = () => {
 
   return (
     <>
-      <Navbar sticky="top" bg='dark' variant='dark' expand='lg' className='navbar' >
-        <Container fluid>
-          <Navbar.Brand as={Link} to='/'>
-          Expense Tracker 💸
-          </Navbar.Brand>
-          <Navbar.Toggle aria-controls='navbar' />
-          <Navbar.Collapse id='navbar' className='d-flex flex-row-reverse'>
-            <Nav className='ml-auto d-flex'>
+    <Navbar collapseOnSelect expand="lg" sticky="top" bg='dark' variant='dark' className='navbar' >
+      <Container>
+        <Navbar.Brand href="#home">Expense Tracker 💸</Navbar.Brand>
+         <Navbar.Toggle aria-controls="responsive-navbar-nav"/> 
+        <Navbar.Collapse id="responsive-navbar-nav">
+            <Nav className='me-auto'>
               {Auth.loggedIn() ? (
                 <>
-                  <Nav.Link as={Link} to='/Budget'>
+                  <Nav.Link href='/Budget'>
                     Budget
                   </Nav.Link>
-                  <Nav.Link as={Link} to='/expenses'>
+                  <Nav.Link href='/expenses'>
                     Expense
                   </Nav.Link>
                   <Nav.Link onClick={Auth.logout}>Logout</Nav.Link>
@@ -33,10 +31,11 @@ const AppNavbar = () => {
               ) : (
                 <Nav.Link onClick={() => setShowModal(true)}>Login/Sign Up</Nav.Link>
               )}
-            </Nav>
+            </Nav >
           </Navbar.Collapse>
         </Container>
       </Navbar>
+      
       {/* set modal data up */}
       <Modal
         size='lg'
