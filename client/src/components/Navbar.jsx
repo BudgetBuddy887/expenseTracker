@@ -20,15 +20,20 @@ const AppNavbar = () => {
             <Nav className='me-auto'>
               {Auth.loggedIn() ? (
                 <>
-                  <Nav.Link href='/Budget'>
-                    Budget
+                <Nav.Item>
+                  <Nav.Link href='/Budget'>Budget</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link href='/expenses'>Expense</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link eventKey="disabled" disabled>
+                    Welcome {localStorage.getItem('username')}
                   </Nav.Link>
-                  <Nav.Link href='/expenses'>
-                    Expense
-                  </Nav.Link>
-                  <NavDropdown title={localStorage.getItem('username')} id="basic-nav-dropdown">
-                      <NavDropdown.Item onClick={Auth.logout}>Logout</NavDropdown.Item>
-                    </NavDropdown>
+                </Nav.Item>
+                <Nav.Item >
+                  <Nav.Link onClick={Auth.logout}>Logout</Nav.Link>
+                </Nav.Item>
                 </>
               ) : (
                 <Nav.Link onClick={() => setShowModal(true)}>Login/Sign Up</Nav.Link>
