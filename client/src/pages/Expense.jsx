@@ -196,7 +196,7 @@ return (
             </Col>
             <Col>
               <Badge bg={mood}>
-                Expeneses <Badge> £ {data && data.me && data.me.dashboard ? data.me.dashboard.sumExpense : 0}</Badge>
+                Expenses <Badge> £ {data && data.me && data.me.dashboard ? data.me.dashboard.sumExpense : 0}</Badge>
               </Badge>
             </Col>
             <Col>
