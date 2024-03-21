@@ -8,7 +8,7 @@ const SignupForm = () => {
   // set initial form state
   const [userFormData, setUserFormData] = useState({ username: '', email: '', password: '' });
   const [addUser, {error}] = useMutation(ADD_USER);
-
+  // const { addUser: { token, user } } = data;
   // set state for form validation
   const [validated] = useState(false);
   // set state for alert
@@ -65,7 +65,6 @@ const SignupForm = () => {
       <Form noValidate validated={validated} onSubmit={handleFormSubmit}>
         {/* show alert if server response is bad */}
         <Alert dismissible onClose={() => setShowAlert(false)} show={showAlert} variant='danger'>
-          Something went wrong with your signup!
         </Alert>
 
         <Form.Group className='mb-3'>

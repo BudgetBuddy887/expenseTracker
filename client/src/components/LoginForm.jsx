@@ -30,6 +30,7 @@ const LoginForm = (props) => {
 
       Auth.login(data.login.token);
       localStorage.setItem('user', JSON.stringify(data));
+      localStorage.setItem('username', data.login.user.username);
     } catch (e) {
       console.error(e);
     }
