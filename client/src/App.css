@@ -3,11 +3,11 @@ body {
 }
 
 .navbar {
-  margin-bottom: 5px;
+  margin-bottom: 6px;
 }
 
 .expense-table {
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .footer {
@@ -21,6 +21,8 @@ body {
   margin-left: 80px;
   margin-right: 80px;
 }
+
+
 /* h1,
 h2,
 h3,
