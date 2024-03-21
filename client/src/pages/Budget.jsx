@@ -93,8 +93,8 @@ const Budget = () => {
       <Row>
         <Col>
           <Card>
-            <Card.Header className="bg-secondary text-white">
-              <h4 className="mb-0">My Budget</h4>
+            <Card.Header className="bg-secondary text-black">
+              <h4 className="mb-0" >My Budget</h4>
             </Card.Header>
             <Card.Body>
               <Row className="mb-3">
