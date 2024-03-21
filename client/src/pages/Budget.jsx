@@ -93,7 +93,7 @@ const Budget = () => {
       <Row>
         <Col>
           <Card>
-            <Card.Header className="bg-primary text-white">
+            <Card.Header className="bg-secondary text-white">
               <h4 className="mb-0">My Budget</h4>
             </Card.Header>
             <Card.Body>
@@ -134,19 +134,19 @@ const Budget = () => {
                         <td>£{budget.amount.toFixed(2)}</td>
                         <td>
                           <Button
-                            variant="primary"
+                            variant="success"
                             size="sm"
                             onClick={() => openEditModal(budget)}
                             className="me-2"
                           >
-                            Edit
+                            ✎ 
                           </Button>
                           <Button
-                            variant="danger"
+                            variant='danger'
                             size="sm"
                             onClick={() => handleDeleteBudget(budget._id)}
                           >
-                            Delete
+                            🗑️
                           </Button>
                         </td>
                       </tr>
